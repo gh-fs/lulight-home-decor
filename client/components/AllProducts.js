@@ -9,10 +9,11 @@ class AllProducts extends React.Component {
   }
 
   render() {
+    console.log(this.props.products)
     return (
       <div>
-        {this.props.products.map(product => {
-          return <div>{product.name}</div>
+        {this.props.allProducts.map(product => {
+          return <div key={product.id}>{product.name}</div>
         })}
       </div>
     )
@@ -21,7 +22,7 @@ class AllProducts extends React.Component {
 
 const mapState = state => {
   return {
-    products: state
+    allProducts: state.allProducts
   }
 }
 
