@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {fetchProducts} from '../store/allProducts'
 import {Card, Button, Container, Row, Col} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 class AllProducts extends React.Component {
   componentDidMount() {
@@ -25,7 +26,11 @@ class AllProducts extends React.Component {
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
                         <Card.Text>{product.description}</Card.Text>
-                        <Button variant="primary">See detail</Button>
+                        <Button variant="dark">
+                          <Link to={`/products/${product.id}`}>
+                            See Details
+                          </Link>
+                        </Button>
                       </Card.Body>
                     </Card>
                   </div>

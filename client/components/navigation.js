@@ -12,24 +12,26 @@ const Navigation = ({handleClick, isLoggedIn}) => (
       {isLoggedIn ? (
         <div>
           {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
-            Logout
-          </a>
+          <Nav className="mr-auto">
+            <Nav.Link href="/home">Home</Nav.Link>
+            <Nav.Link href="/products">All Products</Nav.Link>
+            <Nav.Link href="#" onClick={handleClick}>
+              Logout
+            </Nav.Link>
+          </Nav>
         </div>
       ) : (
         <div>
           {/* The navbar will show these links before you log in */}
           <Nav className="mr-auto">
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/signup">Sign Up</Nav.Link>
             <Nav.Link href="/home">Home</Nav.Link>
             <Nav.Link href="/products">All Products</Nav.Link>
+            <Nav.Link href="/login">Login</Nav.Link>
+            <Nav.Link href="/signup">Sign Up</Nav.Link>
           </Nav>
         </div>
       )}
     </Navbar>
-    <hr />
   </div>
 )
 
