@@ -1,29 +1,34 @@
 import axios from 'axios'
 
-const gotSingleProduct = data => {
+//action types
+const SET_PRODUCT = 'SET_PRODUCT'
+
+//action creators
+const gotSingleProduct = singleProduct => {
   return {
-    type: 'GOT_SINGLE_PRODUCT',
-    singleProduct: data
+    type: SET_PRODUCT,
+    singleProduct
   }
 }
 
+// thunk creators
 export const fetchSingleProductById = id => {
   return async dispatch => {
-    const {data} = await axios.get(`/api/products/${id}`)
-    dispatch(gotSingleProduct(data))
+    try {
+      const {data} = await axios.get(`/api/products/${id}`)
+      dispatch(gotSingleProduct(data))
+    } catch (err) {
+      console.error(err)
+    }
   }
 }
 
-const initialState = {
-  singleProduct: {}
-}
+const initialState = {}
 
 export default function singleProductReducer(state = initialState, action) {
   switch (action.type) {
-    case 'GOT_SINGLE_PRODUCT':
-      return {
-        singleProduct: action.singleProduct
-      }
+    case SET_PRODUCT:
+      return action.singleProduct
     default:
       return state
   }

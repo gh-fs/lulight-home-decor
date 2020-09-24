@@ -2,11 +2,12 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const Order = db.define('order', {
-  status: {
-    type: Sequelize.ENUM('active', 'completed', 'deleted')
+  completed: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   },
   subtotal: {
-    type: Sequelize.DECIMAL
+    type: Sequelize.INTEGER
   }
 })
 

@@ -22,8 +22,8 @@ const orderHistory = require('./orderHistory')
 Order.belongsTo(User)
 User.hasMany(Order)
 
-Product.belongsToMany(Order, {through: 'orderHistory'})
-Order.belongsToMany(Product, {through: 'orderHistory'})
+Product.belongsToMany(Order, {through: orderHistory})
+Order.belongsToMany(Product, {through: orderHistory})
 
 module.exports = {
   User,
