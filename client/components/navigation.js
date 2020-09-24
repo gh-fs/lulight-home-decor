@@ -1,14 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
+// import {Link} from 'react-router-dom'
 import {logout} from '../store'
 import {Navbar, Nav} from 'react-bootstrap'
 
 const Navigation = ({handleClick, isLoggedIn}) => (
   <div>
     <Navbar bg="dark" variant="dark">
-      <h1>Lulight</h1>
+      <img
+        src="http://lulightshop.com/wp-content/uploads/2019/07/logo-lulight.png"
+        alt="Lulight logo"
+        width="100"
+        height="100"
+      />
       {isLoggedIn ? (
         <div>
           {/* The navbar will show these links after you log in */}
