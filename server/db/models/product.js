@@ -10,7 +10,7 @@ const Product = db.define('product', {
     }
   },
   description: {
-    type: Sequelize.TEXT
+    type: Sequelize.STRING
   },
   image: {
     type: Sequelize.STRING,
@@ -21,16 +21,13 @@ const Product = db.define('product', {
     defaultValue: 0
   },
   price: {
-    type: Sequelize.DECIMAL(10, 2),
+    type: Sequelize.INTEGER,
     allowNull: false,
-    defaultValue: 1.0
+    defaultValue: 100
   },
   category: {
     type: Sequelize.ENUM('Shelves', 'Hooks', 'Mirrors', 'Lights'),
     allowNull: false
-  },
-  reviews: {
-    type: Sequelize.TEXT
   }
 })
 
