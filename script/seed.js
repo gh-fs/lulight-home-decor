@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../server/db')
-const {User} = require('../server/db/models')
+const {User, Order} = require('../server/db/models')
 const {Product} = require('../server/db/models')
 
 async function seed() {
@@ -16,7 +16,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.1411971502_lt24-768x1024.jpg',
       inventory: 7,
-      price: 160,
+      price: 16000,
       category: 'Mirrors',
       reviews: ''
     }),
@@ -27,7 +27,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/10/il_fullxfull.1952446239_kh3t-768x768.jpg',
       inventory: 35,
-      price: 187,
+      price: 18700,
       category: 'Mirrors',
       reviews: ''
     }),
@@ -38,7 +38,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.1750820684_9ujr-768x768.jpg',
       inventory: 7,
-      price: 59,
+      price: 5900,
       category: 'Hooks',
       reviews: ''
     }),
@@ -49,7 +49,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.1838018577_jbjn-768x576.jpg',
       inventory: 17,
-      price: 24,
+      price: 2400,
       category: 'Hooks',
       reviews: ''
     }),
@@ -60,7 +60,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/10/il_fullxfull.1776338284_l6bc-768x576.jpg',
       inventory: 34,
-      price: 67,
+      price: 6700,
       category: 'Hooks',
       reviews: ''
     }),
@@ -71,7 +71,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.2023660545_8mrr-768x576.jpg',
       inventory: 43,
-      price: 19,
+      price: 1900,
       category: 'Shelves',
       reviews: ''
     }),
@@ -82,7 +82,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.1799985487_xoaf-768x656.jpg',
       inventory: 25,
-      price: 93,
+      price: 9300,
       category: 'Shelves',
       reviews: ''
     }),
@@ -93,7 +93,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/09/il_fullxfull.1799416707_31ce-768x548.jpg',
       inventory: 23,
-      price: 35,
+      price: 3500,
       category: 'Shelves',
       reviews: ''
     }),
@@ -104,7 +104,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/10/il_fullxfull.1809648891_44dj-768x566.jpg',
       inventory: 8,
-      price: 230,
+      price: 23000,
       category: 'Lights',
       reviews: ''
     }),
@@ -115,7 +115,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/10/il_fullxfull.1763386718_d9bb-768x457.jpg',
       inventory: 27,
-      price: 190,
+      price: 19000,
       category: 'Lights',
       reviews: ''
     }),
@@ -126,7 +126,7 @@ async function seed() {
       image:
         'https://lulightshop.com/wp-content/uploads/2019/10/il_fullxfull.1761029854_gi9o-768x455.jpg',
       inventory: 27,
-      price: 230,
+      price: 23000,
       category: 'Lights',
       reviews: ''
     })
@@ -134,8 +134,33 @@ async function seed() {
 
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'})
+    User.create({email: 'murphy@email.com', password: '123'}),
+    User.create({email: 'roberto@email.com', password: '123', isAdmin: true})
   ])
+
+  const orders = await Promise.all([
+    Order.create({subtotal: 10000}),
+    Order.create({subtotal: 20000})
+  ])
+
+  const [cody, murphy, roberto] = users
+
+  const [
+    one,
+    two,
+    three,
+    four,
+    five,
+    six,
+    seven,
+    eight,
+    nine,
+    ten,
+    eleven
+  ] = products
+
+  const [orderOne, orderTwo] = orders
+
   console.log(`seeded ${products.length} products`)
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)

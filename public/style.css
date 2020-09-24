@@ -23,3 +23,9 @@ form div {
 .single-product {
   margin-left: 30%;
 }
+
+.not-found {
+  text-align: center;
+  font-size: 1.5em;
+  margin: 10px;
+}

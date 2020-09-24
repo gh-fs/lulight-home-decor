@@ -12,33 +12,39 @@ class AllProducts extends React.Component {
 
   //name, image,description,button
   render() {
-    console.log(this.props.products)
+    const allProducts = this.props.allProducts
     return (
-      <div style={{backgroundColor: '#c3aed6'}}>
-        <Container>
-          <Row>
-            {this.props.allProducts.map(product => {
-              return (
-                <Col key={product.id}>
-                  <div style={{margin: '10px'}}>
-                    <Card style={{width: '18rem'}}>
-                      <Card.Img variant="top" src={product.image} />
-                      <Card.Body>
-                        <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
-                        <Button variant="dark">
-                          <Link to={`/products/${product.id}`}>
-                            See Details
-                          </Link>
-                        </Button>
-                      </Card.Body>
-                    </Card>
-                  </div>
-                </Col>
-              )
-            })}
-          </Row>
-        </Container>
+      <div>
+        {allProducts.length ? (
+          <div style={{backgroundColor: '#c3aed6'}}>
+            <Container>
+              <Row>
+                {allProducts.map(product => {
+                  return (
+                    <Col key={product.id}>
+                      <div style={{margin: '10px'}}>
+                        <Card style={{width: '18rem'}}>
+                          <Card.Img variant="top" src={product.image} />
+                          <Card.Body>
+                            <Card.Title>{product.name}</Card.Title>
+                            <Card.Text>{product.description}</Card.Text>
+                            <Button variant="dark">
+                              <Link to={`/products/${product.id}`}>
+                                See Details
+                              </Link>
+                            </Button>
+                          </Card.Body>
+                        </Card>
+                      </div>
+                    </Col>
+                  )
+                })}
+              </Row>
+            </Container>
+          </div>
+        ) : (
+          <div className="not-found">There are no products to display.</div>
+        )}
       </div>
     )
   }
