@@ -134,16 +134,13 @@ async function seed() {
 
   const users = await Promise.all([
     User.create({email: 'cody@email.com', password: '123'}),
-    User.create({email: 'murphy@email.com', password: '123'}),
+    User.create({email: 'stella@email.com', password: '123'}),
     User.create({email: 'roberto@email.com', password: '123', isAdmin: true})
   ])
 
-  const orders = await Promise.all([
-    Order.create({subtotal: 10000}),
-    Order.create({subtotal: 20000})
-  ])
+  const orders = await Promise.all([Order.create(), Order.create()])
 
-  const [cody, murphy, roberto] = users
+  const [cody, stella, roberto] = users
 
   const [
     one,
@@ -161,8 +158,18 @@ async function seed() {
 
   const [orderOne, orderTwo] = orders
 
+  await orderOne.addProduct(one)
+  await orderOne.addProduct(two)
+  await cody.addOrder(orderOne)
+
+  await orderTwo.addProduct(three)
+  await orderTwo.addProduct(four)
+  await orderTwo.addProduct(five)
+  await stella.addOrder(orderTwo)
+
   console.log(`seeded ${products.length} products`)
   console.log(`seeded ${users.length} users`)
+  console.log(`seeded ${orders.length} orders`)
   console.log(`seeded successfully`)
 }
 
