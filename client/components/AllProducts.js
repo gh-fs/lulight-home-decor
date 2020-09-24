@@ -25,7 +25,7 @@ class AllProducts extends React.Component {
                       <Card.Img variant="top" src={product.image} />
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
-                        <Card.Text>{product.description}</Card.Text>
+                        <Card.Text>Price: ${product.price}</Card.Text>
                         <Button variant="dark">
                           <Link to={`/products/${product.id}`}>
                             See Details
