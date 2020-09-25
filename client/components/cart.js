@@ -3,19 +3,36 @@ import {connect} from 'react-redux'
 import {createNewCart, getCartFromServer} from '../store/cart'
 import {me} from '../store/user'
 
-export class Cart extends React.Component {
-  async componentDidMount() {
-    let user = await this.props.loadUser()
-    console.log(user)
-    console.log('this is before the loadcart!!!!', this.props.user)
-    await this.props.loadCart(this.props.user.id)
-  }
-  render() {
-    console.log(this.props.cart)
-    console.log(this.props.user)
-    return <div>Hello</div>
-  }
+export function Cart(props) {
+  console.log(props.user)
+  return <div>Testing</div>
 }
+// export class Cart extends React.Component {
+//   // constructor(){
+//   //   this.state={
+//   //     cart:
+//   //   }
+//   // }
+//   async componentDidMount() {
+//     console.log('incomponent did mount')
+//     let user = await this.props.loadUser()
+//     console.log(this.props)
+//     // console.log('this is before the loadcart!!!!', this.props.user)
+//     await this.props.loadCart(2)
+//   }
+//   render() {
+//     // let user = this.props.user
+//     // // if (user.id) {
+//     // let cart = this.props.loadCart(user.id)
+//     // console.log('cart', cart)
+//     // // }
+
+//     // console.log(this.props.user)
+//     // console.log(this.props.cart)
+
+//     return <div>Hello</div>
+//   }
+// }
 
 const mapState = state => {
   return {

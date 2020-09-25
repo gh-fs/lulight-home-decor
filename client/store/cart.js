@@ -14,15 +14,18 @@ export const getCartFromServer = userId => {
   return async dispatch => {
     try {
       console.log('we are in the reducer')
-      console.log(userId)
+      // console.log(userId)
       const response = await axios.get(`api/orders/${userId}`)
       let order = response.data
-      console.log(order)
-      if (order) {
-        dispatch(setCart(order))
-      } else {
-        dispatch(createNewCart(userId))
-      }
+      // console.log('order with joint table', order)
+      // console.log(order.products)
+      dispatch(setCart(order.products))
+      // if (order) {
+      //   dispatch(setCart(order))
+      // } else {
+      //   console.log('NO cart before')
+      //   // dispatch(createNewCart(userId))
+      // }
     } catch (err) {
       //console.error(err)
       console.log('error from thunk creator')
@@ -32,7 +35,7 @@ export const getCartFromServer = userId => {
 export const createNewCart = userId => {
   return async dispatch => {
     try {
-      console.log(userId)
+      // console.log(userId)
       const {data: newCart} = await axios.post('/api/orders', {userId})
       dispatch(setCart(newCart))
     } catch (err) {
@@ -46,7 +49,9 @@ const initialState = []
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CART:
-      return action.order
+      let res = [...state, action.order]
+      console.log('current state of cart', res)
+      return res
     default:
       return state
   }
