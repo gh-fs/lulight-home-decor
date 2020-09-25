@@ -120,7 +120,7 @@ async function seed() {
       reviews: ''
     }),
     Product.create({
-      name: 'Kitchen handelier',
+      name: 'Kitchen Chandelier',
       description:
         'Kitchen Chandelier, Farmhouse Decor, Pendant Lighting, Wood Light, Lulight Kitchen Light, Dining Room Light, Wood Fixture, Flush Mount Light',
       image:
