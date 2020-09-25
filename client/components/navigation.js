@@ -5,40 +5,61 @@ import {Link} from 'react-router-dom'
 import {logout} from '../store'
 import {Navbar, Nav} from 'react-bootstrap'
 
-const Navigation = ({handleClick, isLoggedIn}) => (
-  <div>
-    <Navbar bg="dark" variant="dark">
-      <h1>Lulight</h1>
-      {isLoggedIn ? (
-        <div>
-          {/* The navbar will show these links after you log in */}
-          <Nav className="mr-auto">
-            <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="/products">All Products</Nav.Link>
-            <Nav.Link href="/cart">Cart</Nav.Link>
-            <Nav.Link href="#" onClick={handleClick}>
-              Logout
-            </Nav.Link>
-          </Nav>
-        </div>
-      ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Nav className="mr-auto">
-            <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="/products">All Products</Nav.Link>
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/signup">Sign Up</Nav.Link>
-          </Nav>
-        </div>
-      )}
-    </Navbar>
-  </div>
-)
+class Navigation extends React.Component {
+  componentDidMount() {}
+
+  render() {
+    return (
+      <div>
+        <Navbar bg="dark" variant="dark">
+          <h1>Lulight</h1>
+          {this.props.isLoggedIn ? (
+            <div>
+              {/* The navbar will show these links after you log in */}
+              <Nav className="mr-auto">
+                <Nav.Link as={Link} to="/home">
+                  Home
+                </Nav.Link>
+                <Nav.Link as={Link} to="/products">
+                  All Products
+                </Nav.Link>
+                <Nav.Link as={Link} to="/cart">
+                  Cart({this.props.cart.length})
+                </Nav.Link>
+                <Nav.Link as={Link} to="#" onClick={this.props.handleClick}>
+                  Logout
+                </Nav.Link>
+              </Nav>
+            </div>
+          ) : (
+            <div>
+              {/* The navbar will show these links before you log in */}
+              <Nav className="mr-auto">
+                <Nav.Link as={Link} to="/home">
+                  Home
+                </Nav.Link>
+                <Nav.Link as={Link} to="/products">
+                  All Products
+                </Nav.Link>
+                <Nav.Link as={Link} to="/login">
+                  Login
+                </Nav.Link>
+                <Nav.Link as={Link} to="/signup">
+                  Sign Up
+                </Nav.Link>
+              </Nav>
+            </div>
+          )}
+        </Navbar>
+      </div>
+    )
+  }
+}
 
 const mapState = state => {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    cart: state.cart
   }
 }
 
