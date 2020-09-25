@@ -7,13 +7,20 @@ import {me} from './store'
 import AllProducts from './components/AllProducts'
 import SingleProduct from './components/SingleProduct'
 import Cart from './components/cart'
+import PaymentInfo from './components/PaymentInfo'
+import ThankYou from './components/ThankYou'
+import {getCartFromServer} from './store/cart'
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     this.props.loadInitialData()
+
+    if (this.props.user.id) {
+      await this.props.loadCart(this.props.user.id)
+    }
   }
 
   render() {
@@ -22,16 +29,23 @@ class Routes extends Component {
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
+        <Route exact path="/" component={UserHome} />
+        <Route path="/home" component={UserHome} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route exact path="/products/:id" component={SingleProduct} />
         <Route path="/products" component={AllProducts} />
+        <Route path="/payment" component={PaymentInfo} />
+        <Route path="/thankyou" component={ThankYou} />
         <Route path="/cart" component={Cart} />
 
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
+            {/* <Route path="/cart" component={Cart} />
+            <Route path="/payment" component={PaymentInfo} />
+            <Routes path="/thankyou" componenet={ThankYou} /> */}
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
@@ -48,7 +62,8 @@ const mapState = state => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    user: state.user
   }
 }
 
@@ -56,6 +71,9 @@ const mapDispatch = dispatch => {
   return {
     loadInitialData() {
       dispatch(me())
+    },
+    loadCart(userId) {
+      dispatch(getCartFromServer(userId))
     }
   }
 }
