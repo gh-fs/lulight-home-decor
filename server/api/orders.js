@@ -20,7 +20,6 @@ router.get('/:userId', async (req, res, next) => {
       // include: {model: OrderHistory},
       include: [{all: true}]
     })
-
     res.send(order)
   } catch (err) {
     next(err)

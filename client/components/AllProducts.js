@@ -7,10 +7,9 @@ import {Link} from 'react-router-dom'
 class AllProducts extends React.Component {
   componentDidMount() {
     this.props.fetchProducts()
-    console.log(this.props)
   }
 
-  //name, image,description,button
+  //name, image, description,button
   render() {
     const allProducts = this.props.allProducts
     return (

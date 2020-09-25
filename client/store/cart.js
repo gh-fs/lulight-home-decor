@@ -4,16 +4,18 @@ import {Next} from 'react-bootstrap/esm/PageItem'
 let GET_CART_FROM_SERVER = 'GET_CART_FROM_SERVER'
 let SET_CART = 'SET_CART'
 let CREATE_NEW_CART = 'CREATE_NEW_CART'
+
 //action creators
 const setCart = order => ({
   type: SET_CART,
   order
 })
+
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {
     try {
-      console.log('we are in the reducer')
+      // console.log('we are in the reducer')
       // console.log(userId)
       const response = await axios.get(`api/orders/${userId}`)
       let order = response.data
@@ -28,10 +30,11 @@ export const getCartFromServer = userId => {
       // }
     } catch (err) {
       //console.error(err)
-      console.log('error from thunk creator')
+      console.log('error occurred with getCartFromServer thunk creator')
     }
   }
 }
+
 export const createNewCart = userId => {
   return async dispatch => {
     try {
@@ -49,9 +52,10 @@ const initialState = []
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CART:
-      let res = [...state, action.order]
-      console.log('current state of cart', res)
-      return res
+      // let res = [...state, action.order]
+      // console.log('current state of cart', res)
+      // return res
+      return action.order
     default:
       return state
   }

@@ -15,6 +15,7 @@ const Navigation = ({handleClick, isLoggedIn}) => (
           <Nav className="mr-auto">
             <Nav.Link href="/home">Home</Nav.Link>
             <Nav.Link href="/products">All Products</Nav.Link>
+            <Nav.Link href="/cart">Cart</Nav.Link>
             <Nav.Link href="#" onClick={handleClick}>
               Logout
             </Nav.Link>

@@ -3,7 +3,8 @@ const db = require('../db')
 
 const OrderHistory = db.define('orderHistory', {
   quantity: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 1
   }
 })
 
