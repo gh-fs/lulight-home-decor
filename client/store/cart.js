@@ -18,16 +18,16 @@ export const getCartFromServer = userId => {
       // console.log('we are in the reducer')
       // console.log(userId)
       const response = await axios.get(`api/orders/${userId}`)
-      let order = response.data
       // console.log('order with joint table', order)
       // console.log(order.products)
-      dispatch(setCart(order.products))
-      // if (order) {
-      //   dispatch(setCart(order))
-      // } else {
-      //   console.log('NO cart before')
-      //   // dispatch(createNewCart(userId))
-      // }
+
+      if (response.data) {
+        let order = response.data
+        dispatch(setCart(order.products))
+      } else {
+        console.log('NO cart before')
+        dispatch(createNewCart(userId))
+      }
     } catch (err) {
       //console.error(err)
       console.log('error occurred with getCartFromServer thunk creator')

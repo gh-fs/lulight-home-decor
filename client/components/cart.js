@@ -30,7 +30,7 @@ export class Cart extends React.Component {
     // if (user.id) {
     //   await this.props.loadCart(user.id)
     // }
-    await this.props.loadCart(2)
+    await this.props.loadCart(this.props.user.id)
   }
   render() {
     // console.log('user in render of cart component', this.props.user)
