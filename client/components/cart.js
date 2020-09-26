@@ -23,6 +23,10 @@ export class Cart extends React.Component {
   //   const currentItem = this.state.currentCart.slice();
   //   currentItem.filter(x=>x.id !== product.id)
   // }
+  constructor() {
+    super()
+    this.calTotal = this.calTotal.bind(this)
+  }
 
   async componentDidMount() {
     // console.log('props in componentDidMount', this.props)
@@ -30,13 +34,22 @@ export class Cart extends React.Component {
     // if (user.id) {
     //   await this.props.loadCart(user.id)
     // }
+    console.log(this.props.user.id)
     await this.props.loadCart(this.props.user.id)
   }
+
+  calTotal(arr) {
+    arr.reduce((total, current) => {
+      return (total += current.price * current.orderHistory.quantity)
+    }, 0)
+  }
+
   render() {
     // console.log('user in render of cart component', this.props.user)
     // console.log('cart in render of cart component', this.props.cart)
-    let currentCart = this.props.cart
 
+    let currentCart = this.props.cart
+    console.log('current cart', currentCart)
     return (
       // <div>
       //   <div>Cart Items (from class component):</div>
@@ -54,36 +67,39 @@ export class Cart extends React.Component {
           </div>
         )}
         <div>
-          <div className="cart">
-            <ul className="cart-items">
-              {currentCart &&
-                currentCart.map(item => (
-                  <li key={item.id}>
-                    <div>
-                      <img src={item.image} alt={item.name} />
+          {currentCart &&
+            currentCart.map(item => {
+              return (
+                <div
+                  className="card mb-3"
+                  style={{maxWidth: '540px'}}
+                  key={item.orderHistory.productId}
+                >
+                  <div className="row no-gutters">
+                    <div className="col-md-4">
+                      <img
+                        src={item.image}
+                        className="card-img"
+                        alt={item.name}
+                      />
                     </div>
-                    <div>{item.name}</div>
-                    <div className="right">
-                      ${item.price} x {item.count}
-                      <button
-                        className="button" /*onClick={() => this.props.removeFromCart(item)}*/
-                      >
-                        Remove
-                      </button>
+                    <div className="col-md-8">
+                      <div className="card-body">
+                        <h5 className="card-title">{item.name}</h5>
+                        <p className="card-text">
+                          ${item.price} x {item.orderHistory.quantity}
+                        </p>
+                        <p className="card-text">
+                          <small className="text-muted">button</small>
+                        </p>
+                      </div>
                     </div>
-                  </li>
-                ))}
-            </ul>
-          </div>
-          <div className="cart">
-            <div className="total">
-              <div>Total: 0</div>
-            </div>
-            <div>
-              <button className="button primary">Proceed</button>
-            </div>
-          </div>
+                  </div>
+                </div>
+              )
+            })}
         </div>
+        <div>Total : $100</div>
       </div>
     )
   }

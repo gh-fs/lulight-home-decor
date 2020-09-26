@@ -58,7 +58,8 @@ router.put('/:id', async (req, res, next) => {
       // })
       const selectProduct = await Product.findByPk(req.params.id)
       await order.addProduct(selectProduct)
-      res.json(order)
+      await order.reload()
+      res.json(selectProduct)
     }
   } catch (err) {
     next(err)

@@ -58,10 +58,12 @@ export const addProductToServCart = (productId, userId) => {
       userId: userId,
       productId: productId
     })
-    console.log(orderProduct.data)
+    console.log(orderProduct)
 
     // const newProduct = dispatch(fetchSingleProductById(orderProduct.productId))
-    // dispatch(addProductToCart(newProduct))
+    dispatch(addProductToCart(orderProduct.data))
+    // const response = await axios.get(`api/orders/${userId}`)
+    // dispatch(getCartFromServer(response.data))
   }
 }
 
