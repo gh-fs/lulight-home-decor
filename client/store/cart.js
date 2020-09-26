@@ -52,13 +52,13 @@ export const createNewCart = userId => {
   }
 }
 
-export const addProductToServCart = ({productId, userId}) => {
+export const addProductToServCart = (productId, userId) => {
   return async dispatch => {
-    const orderProduct = await axios.put('api/orderHistories', {
+    const orderProduct = await axios.put(`/api/products/${productId}`, {
       userId: userId,
       productId: productId
     })
-    console.log(orderProduct)
+    console.log(orderProduct.data)
 
     // const newProduct = dispatch(fetchSingleProductById(orderProduct.productId))
     // dispatch(addProductToCart(newProduct))

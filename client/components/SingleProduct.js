@@ -26,6 +26,7 @@ class SingleProduct extends React.Component {
                 <br />
                 Price: ${productPrice}
               </Card.Text>
+
               <Button
                 variant="primary"
                 onClick={() => {

@@ -5,10 +5,11 @@ const {Order} = require('../db/models')
 
 //add product to order
 router.put('/', async (req, res, next) => {
+  //req.body is empty
+  console.log('inside express route!!!!!!', req.user.id)
   try {
-    console.log('inside express route!!!!!!', req.body)
     const order = await Order.findOne({
-      where: {userId: req.body.userId},
+      where: {userId: req.user.id},
       // include: {model: OrderHistory},
       include: [{all: true}]
     })
@@ -25,14 +26,14 @@ router.put('/', async (req, res, next) => {
         productId: req.body.productId,
         quantity: quantity++
       })
-      res.send(orderProduct)
+      res.json(orderProduct)
     } else {
       const newOrderProduct = await OrderHistory.create({
         orderId: order.id,
         productId: req.body.productId,
         quantity: 1
       })
-      res.send(newOrderProduct)
+      res.json(newOrderProduct)
     }
   } catch (err) {
     next(err)
