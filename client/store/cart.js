@@ -1,16 +1,21 @@
 import axios from 'axios'
 import {Next} from 'react-bootstrap/esm/PageItem'
+import {fetchSingeProductById} from './singleProduct'
+
 //action types
-let GET_CART_FROM_SERVER = 'GET_CART_FROM_SERVER'
+
 let SET_CART = 'SET_CART'
-let CREATE_NEW_CART = 'CREATE_NEW_CART'
+let ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART'
 
 //action creators
 const setCart = order => ({
   type: SET_CART,
   order
 })
-
+const addProductToCart = product => ({
+  type: ADD_PRODUCT_TO_CART,
+  product
+})
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {
@@ -47,15 +52,27 @@ export const createNewCart = userId => {
   }
 }
 
+export const addProductToServCart = ({productId, userId}) => {
+  return async dispatch => {
+    const orderProduct = await axios.put('api/orderHistories', {
+      userId: userId,
+      productId: productId
+    })
+    console.log(orderProduct)
+
+    // const newProduct = dispatch(fetchSingleProductById(orderProduct.productId))
+    // dispatch(addProductToCart(newProduct))
+  }
+}
+
 const initialState = []
 
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CART:
-      // let res = [...state, action.order]
-      // console.log('current state of cart', res)
-      // return res
       return action.order
+    case ADD_PRODUCT_TO_CART:
+      return [...state, action.product]
     default:
       return state
   }
