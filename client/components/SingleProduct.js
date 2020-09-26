@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {fetchSingleProductById} from '../store/singleProduct'
+import {addProductToServCart} from '../store/cart'
 import {Card, Button} from 'react-bootstrap'
 
 class SingleProduct extends React.Component {
@@ -25,7 +26,15 @@ class SingleProduct extends React.Component {
                 <br />
                 Price: ${productPrice}
               </Card.Text>
-              <Button variant="primary">Add To Cart</Button>
+
+              <Button
+                variant="primary"
+                onClick={() => {
+                  this.props.addProduct(product.id, this.props.user.id)
+                }}
+              >
+                Add To Cart
+              </Button>
             </Card.Body>
           </Card>
         </div>
@@ -38,7 +47,8 @@ class SingleProduct extends React.Component {
 
 const mapState = state => {
   return {
-    singleProductInReact: state.singleProduct
+    singleProductInReact: state.singleProduct,
+    user: state.user
   }
 }
 
@@ -46,6 +56,9 @@ const mapDispatch = dispatch => {
   return {
     loadSingleProductInReact: id => {
       dispatch(fetchSingleProductById(id))
+    },
+    addProduct: (productId, userId) => {
+      dispatch(addProductToServCart(productId, userId))
     }
   }
 }

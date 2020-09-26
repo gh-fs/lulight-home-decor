@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const {default: Axios} = require('axios')
-const {Order, OrderHistory} = require('../db/models')
+const {Order} = require('../db/models')
 
 // get all orders
 router.get('/', async (req, res, next) => {
