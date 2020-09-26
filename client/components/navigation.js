@@ -26,6 +26,9 @@ class Navigation extends React.Component {
                 <Nav.Link as={Link} to="/cart">
                   Cart({this.props.cart.length})
                 </Nav.Link>
+                <Nav.Link as={Link} to="/users">
+                  Users
+                </Nav.Link>
                 <Nav.Link as={Link} to="#" onClick={this.props.handleClick}>
                   Logout
                 </Nav.Link>
@@ -40,6 +43,9 @@ class Navigation extends React.Component {
                 </Nav.Link>
                 <Nav.Link as={Link} to="/products">
                   All Products
+                </Nav.Link>
+                <Nav.Link as={Link} to="/cart">
+                  Cart({this.props.cart.length})
                 </Nav.Link>
                 <Nav.Link as={Link} to="/login">
                   Login
