@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const {default: Axios} = require('axios')
-const {Order} = require('../db/models')
+const {Order, OrderHistory} = require('../db/models')
+const Product = require('../db/models/product')
 
 // get all orders
 router.get('/', async (req, res, next) => {
@@ -12,12 +13,11 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-//get single order
+//get single order (get cart for logged in user)
 router.get('/:userId', async (req, res, next) => {
   try {
     const order = await Order.findOne({
-      where: {userId: req.params.userId},
-      // include: {model: OrderHistory},
+      where: {userId: req.params.userId, completed: false},
       include: [{all: true}]
     })
     res.send(order)
@@ -25,6 +25,7 @@ router.get('/:userId', async (req, res, next) => {
     next(err)
   }
 })
+
 //create new order
 router.post('/', async (req, res, next) => {
   try {
@@ -41,6 +42,7 @@ router.post('/', async (req, res, next) => {
     next(err)
   }
 })
+
 //update order
 router.put('/', async (req, res, next) => {})
 

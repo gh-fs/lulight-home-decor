@@ -3,7 +3,6 @@ import {Next} from 'react-bootstrap/esm/PageItem'
 import {fetchSingeProductById} from './singleProduct'
 
 //action types
-
 let SET_CART = 'SET_CART'
 let ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART'
 
@@ -12,22 +11,20 @@ const setCart = order => ({
   type: SET_CART,
   order
 })
-const addProductToCart = product => ({
-  type: ADD_PRODUCT_TO_CART,
-  product
-})
+
+// const addProductToCart = (product) => ({
+//   type: ADD_PRODUCT_TO_CART,
+//   product,
+// })
+
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {
     try {
-      // console.log('we are in the reducer')
-      // console.log(userId)
       const response = await axios.get(`api/orders/${userId}`)
-      // console.log('order with joint table', order)
-      // console.log(order.products)
-
       if (response.data) {
         let order = response.data
+        console.log('order returned from axios', order.products)
         dispatch(setCart(order.products))
       } else {
         console.log('NO cart before')
@@ -54,16 +51,13 @@ export const createNewCart = userId => {
 
 export const addProductToServCart = (productId, userId) => {
   return async dispatch => {
-    const orderProduct = await axios.put(`/api/products/${productId}`, {
+    const response = await axios.put(`/api/products/${productId}`, {
       userId: userId,
       productId: productId
     })
-    console.log(orderProduct)
-
-    // const newProduct = dispatch(fetchSingleProductById(orderProduct.productId))
-    dispatch(addProductToCart(orderProduct.data))
-    // const response = await axios.get(`api/orders/${userId}`)
-    // dispatch(getCartFromServer(response.data))
+    const updatedOrder = response.data
+    console.log('order returned from add to cart', updatedOrder)
+    dispatch(setCart(updatedOrder.products))
   }
 }
 

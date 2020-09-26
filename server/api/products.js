@@ -28,39 +28,31 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.put('/:id', async (req, res, next) => {
-  //req.body is empty
-  console.log('inside express route!!!!!!', req.user.id)
   try {
-    const order = await Order.findOne({
-      where: {userId: req.user.id},
-      // include: {model: OrderHistory},
+    const existingOrder = await Order.findOne({
+      where: {userId: req.user.id, completed: false},
       include: [{all: true}]
     })
-    // console.log(order)
-    const orderProduct = await OrderHistory.findOne({
+
+    const productAlreadyInCart = await OrderHistory.findOne({
       where: {
         productId: req.params.id,
-        orderId: order.id
+        orderId: existingOrder.id
       }
     })
-    console.log('order product', orderProduct)
-    if (orderProduct) {
-      await orderProduct.update({
-        quantity: orderProduct.quantity + 1
+
+    if (productAlreadyInCart) {
+      await productAlreadyInCart.update({
+        quantity: productAlreadyInCart.quantity + 1
       })
-      res.json(orderProduct)
+      await existingOrder.reload()
     } else {
-      console.log('create new row for order history')
-      // const newOrderProduct = await OrderHistory.create({
-      //   orderId: req.body.orderId,
-      //   productId: req.params.id,
-      //   quantity: 1,
-      // })
-      const selectProduct = await Product.findByPk(req.params.id)
-      await order.addProduct(selectProduct)
-      await order.reload()
-      res.json(selectProduct)
+      const newProduct = await Product.findByPk(req.params.id)
+      await existingOrder.addProduct(newProduct)
+      await existingOrder.reload()
     }
+
+    res.json(existingOrder)
   } catch (err) {
     next(err)
   }
