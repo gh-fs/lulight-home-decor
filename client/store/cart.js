@@ -5,11 +5,17 @@ import {fetchSingeProductById} from './singleProduct'
 //action types
 let SET_CART = 'SET_CART'
 let ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART'
+let DELETE_ITEM = 'DELETE_ITEM'
 
 //action creators
 const setCart = order => ({
   type: SET_CART,
   order
+})
+
+const deleteItem = productId => ({
+  type: DELETE_ITEM,
+  productId
 })
 
 // const addProductToCart = (product) => ({
@@ -61,6 +67,13 @@ export const addProductToServCart = (productId, userId) => {
   }
 }
 
+export const deleteItemFromCart = productId => {
+  return async dispatch => {
+    await axios.delete(`/api/products/${productId}`)
+    dispatch(deleteItem(productId))
+  }
+}
+
 const initialState = []
 
 export default function cartReducer(state = initialState, action) {
@@ -69,6 +82,8 @@ export default function cartReducer(state = initialState, action) {
       return action.order
     case ADD_PRODUCT_TO_CART:
       return [...state, action.product]
+    case DELETE_ITEM:
+      return [...state].filter(product => product.id !== action.productId)
     default:
       return state
   }

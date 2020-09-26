@@ -1,6 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {createNewCart, getCartFromServer} from '../store/cart'
+import {
+  createNewCart,
+  getCartFromServer,
+  deleteItemFromCart
+} from '../store/cart'
 import {me} from '../store/user'
 
 export class Cart extends React.Component {
@@ -25,10 +29,10 @@ export class Cart extends React.Component {
     return (
       <div>
         {currentCart.length === 0 ? (
-          <div className="cart cart-header">Cart is empty</div>
+          <div className="cart cart-header">Your cart is empty</div>
         ) : (
           <div className="cart cart-header">
-            You have {currentCart.length} products in the cart
+            There are {currentCart.length} products in your cart
           </div>
         )}
         <div>
@@ -55,9 +59,16 @@ export class Cart extends React.Component {
                           ${(item.price / 100).toFixed(2)} x{' '}
                           {item.orderHistory.quantity}
                         </p>
-                        <p className="card-text">
+                        {/* <p className="card-text">
                           <small className="text-muted">button</small>
-                        </p>
+                        </p> */}
+                        <button
+                          type="button"
+                          className="delete"
+                          onClick={() => this.props.deleteItem(item.id)}
+                        >
+                          Remove From Cart
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -82,6 +93,9 @@ const mapDispatch = dispatch => {
   return {
     loadCart: userId => {
       dispatch(getCartFromServer(userId))
+    },
+    deleteItem: itemId => {
+      dispatch(deleteItemFromCart(itemId))
     }
     // createCart: (userId) => {
     //   dispatch(createNewCart(userId))

@@ -58,4 +58,24 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const existingOrder = await Order.findOne({
+      where: {userId: req.user.id, completed: false},
+      include: [{all: true}]
+    })
+
+    await OrderHistory.destroy({
+      where: {
+        productId: req.params.id,
+        orderId: existingOrder.id
+      }
+    })
+
+    res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router
