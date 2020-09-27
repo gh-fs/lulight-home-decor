@@ -6,9 +6,24 @@ import {logout} from '../store'
 import {Navbar, Nav} from 'react-bootstrap'
 
 class Navigation extends React.Component {
+  constructor() {
+    super()
+    this.calQuantity = this.calQuantity.bind(this)
+  }
+
   componentDidMount() {}
 
+  calQuantity(arr) {
+    // console.log(item)
+    let totalQuantity = arr.reduce((total, item) => {
+      return total + item.orderHistory.quantity
+    }, 0)
+
+    return totalQuantity
+  }
+
   render() {
+    console.log(this.props.cart)
     return (
       <div>
         <Navbar bg="dark" variant="dark">
@@ -24,7 +39,11 @@ class Navigation extends React.Component {
                   Our Products
                 </Nav.Link>
                 <Nav.Link as={Link} to="/cart">
-                  Cart ({this.props.cart.length})
+                  Cart (
+                  {this.props.cart.length
+                    ? this.calQuantity(this.props.cart)
+                    : 0}
+                  )
                 </Nav.Link>
                 <Nav.Link as={Link} to="/users">
                   View Users
