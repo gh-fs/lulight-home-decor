@@ -13,6 +13,7 @@ const isAdminMiddleware = (req, res, next) => {
   }
 }
 
+// get all users
 router.get('/', isAdminMiddleware, async (req, res, next) => {
   try {
     const users = await User.findAll({

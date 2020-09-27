@@ -1,56 +1,58 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Form, Button, Container} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 
-class PaymentInfo extends Component {
-  componentDidMount() {
-    //get the subtotal and update payment amount
-  }
-  render() {
-    return (
-      <div>
-        <Container style={{margin: '20px 20% 10px 20% '}}>
-          <h1>Your payment amount is $100</h1>
+const PaymentInfo = props => {
+  const {sub} = props.location.state
+  return (
+    <div>
+      <Container style={{margin: '20px 20% 10px 20% '}}>
+        <h1>Total payment due: {sub}</h1>
 
-          <Form>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Your Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter name" />
-              <br />
-              <Form.Label>Your Email</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-              <br />
-              <Form.Label>Your address</Form.Label>
-              <Form.Control type="text" placeholder="Enter email" />
-              <br />
-              <Form.Label>Credit card Number</Form.Label>
-              <Form.Control type="number" placeholder="creadit card number" />
-              <br />
-              <Form.Label>Name on the card</Form.Label>
-              <Form.Control type="text" placeholder="creadit card number" />
-              <br />
-              <Form.Label>expiration date</Form.Label>
-              <Form.Control type="date" />
-              <br />
-              <Form.Label>CVV</Form.Label>
-              <Form.Control type="number" />
-              <br />
-              <Form.Label>Zip Code</Form.Label>
-              <Form.Control type="number" />
-              <Form.Check type="checkbox" label="Agree with our terms" />
+        <Form>
+          <Form.Group controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter name" />
+            <br />
+            <Form.Label>E-mail address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" />
+            <Form.Text className="text-muted">
+              We'll never share your email with anyone else.
+            </Form.Text>
+            <br />
+            <Form.Label>Billing address</Form.Label>
+            <Form.Control type="text" placeholder="Enter mailing address" />
+            <br />
+            <Form.Label>Credit card number</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Enter credit card number"
+            />
+            <br />
+            <Form.Label>Name on credit card</Form.Label>
+            <Form.Control type="text" placeholder="Enter name on credit card" />
+            <br />
+            <Form.Label>Expiration date</Form.Label>
+            <Form.Control type="date" />
+            <br />
+            <Form.Label>CVV</Form.Label>
+            <Form.Control type="number" />
+            <br />
+            <Form.Label>Zip code</Form.Label>
+            <Form.Control type="number" />
+            <Form.Check
+              type="checkbox"
+              label="I agree with the terms of purchase"
+            />
 
-              <Button variant="success">
-                <Link to="/thankyou">Sumbit</Link>
-              </Button>
-            </Form.Group>
-          </Form>
-        </Container>
-      </div>
-    )
-  }
+            <Button variant="dark">
+              <Link to="/thankyou">Submit</Link>
+            </Button>
+          </Form.Group>
+        </Form>
+      </Container>
+    </div>
+  )
 }
 
 export default PaymentInfo

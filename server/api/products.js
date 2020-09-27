@@ -1,9 +1,7 @@
 const router = require('express').Router()
-const {Product} = require('../db/models')
-const {OrderHistory} = require('../db/models')
-const {Order} = require('../db/models')
+const {Product, OrderHistory, Order, User} = require('../db/models')
 
-// api/products
+// get all products
 router.get('/', async (req, res, next) => {
   try {
     const products = await Product.findAll()
@@ -13,7 +11,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-// api/products/id
+// get single product
 router.get('/:id', async (req, res, next) => {
   const productId = req.params.id
   try {
@@ -27,40 +25,71 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+// add product to cart
 router.put('/:id', async (req, res, next) => {
-  //req.body is empty
-  console.log('inside express route!!!!!!', req.user.id)
   try {
-    const order = await Order.findOne({
-      where: {userId: req.user.id},
-      // include: {model: OrderHistory},
+    const existingOrder = await Order.findOne({
+      where: {userId: req.user.id, completed: false},
       include: [{all: true}]
     })
-    // console.log(order)
-    const orderProduct = await OrderHistory.findOne({
+    if (existingOrder) {
+      const productAlreadyInCart = await OrderHistory.findOne({
+        where: {
+          productId: req.params.id,
+          orderId: existingOrder.id
+        }
+      })
+
+      if (productAlreadyInCart) {
+        await productAlreadyInCart.update({
+          quantity: productAlreadyInCart.quantity + 1
+        })
+        await existingOrder.reload()
+      } else {
+        const newProduct = await Product.findByPk(req.params.id)
+        await existingOrder.addProduct(newProduct)
+        await existingOrder.reload()
+      }
+
+      res.json(existingOrder)
+    } else {
+      const user = await User.findOne({
+        where: {id: req.user.id}
+      })
+      const newOrder = await Order.create()
+      const newProduct = await Product.findByPk(req.params.id)
+      await user.addOrder(newOrder)
+      await user.save()
+      await newOrder.addProduct(newProduct)
+      await newOrder.save()
+
+      const orderToReturn = await Order.findOne({
+        where: {userId: req.user.id, completed: false},
+        include: [{all: true}]
+      })
+      res.json(orderToReturn)
+    }
+  } catch (err) {
+    next(err)
+  }
+})
+
+// delete product from cart
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const existingOrder = await Order.findOne({
+      where: {userId: req.user.id, completed: false},
+      include: [{all: true}]
+    })
+
+    await OrderHistory.destroy({
       where: {
         productId: req.params.id,
-        orderId: order.id
+        orderId: existingOrder.id
       }
     })
-    console.log('order product', orderProduct)
-    if (orderProduct) {
-      await orderProduct.update({
-        quantity: orderProduct.quantity + 1
-      })
-      res.json(orderProduct)
-    } else {
-      console.log('create new row for order history')
-      // const newOrderProduct = await OrderHistory.create({
-      //   orderId: req.body.orderId,
-      //   productId: req.params.id,
-      //   quantity: 1,
-      // })
-      const selectProduct = await Product.findByPk(req.params.id)
-      await order.addProduct(selectProduct)
-      await order.reload()
-      res.json(selectProduct)
-    }
+
+    res.sendStatus(204)
   } catch (err) {
     next(err)
   }
