@@ -21,13 +21,13 @@ class Navigation extends React.Component {
                   Home
                 </Nav.Link>
                 <Nav.Link as={Link} to="/products">
-                  All Products
+                  Our Products
                 </Nav.Link>
                 <Nav.Link as={Link} to="/cart">
-                  Cart({this.props.cart.length})
+                  Cart ({this.props.cart.length})
                 </Nav.Link>
                 <Nav.Link as={Link} to="/users">
-                  Users
+                  View Users
                 </Nav.Link>
                 <Nav.Link as={Link} to="#" onClick={this.props.handleClick}>
                   Logout

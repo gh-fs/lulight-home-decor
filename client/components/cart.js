@@ -1,11 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {
-  createNewCart,
-  getCartFromServer,
-  deleteItemFromCart
-} from '../store/cart'
-import {me} from '../store/user'
+import {Button} from 'react-bootstrap'
+import {getCartFromServer, deleteItemFromCart} from '../store/cart'
+import {Link} from 'react-router-dom'
 
 export class Cart extends React.Component {
   constructor() {
@@ -14,20 +11,24 @@ export class Cart extends React.Component {
   }
 
   async componentDidMount() {
-    await this.props.loadCart(this.props.user.id)
+    if (this.props.user.id) {
+      await this.props.loadCart(this.props.user.id)
+    }
   }
 
   calTotal(arr) {
-    arr.reduce((total, current) => {
-      total += current.price * current.orderHistory.quantity
-    }, 0)
+    let checkoutTotal = arr.reduce(
+      (total, item) => total + item.price * item.orderHistory.quantity,
+      0
+    )
+    return (checkoutTotal / 100).toFixed(2)
   }
 
   render() {
     let currentCart = this.props.cart
     console.log('current cart', currentCart)
     return (
-      <div>
+      <div className="whole-cart">
         {currentCart.length === 0 ? (
           <div className="cart cart-header">Your cart is empty</div>
         ) : (
@@ -40,7 +41,7 @@ export class Cart extends React.Component {
             currentCart.map(item => {
               return (
                 <div
-                  className="card mb-3"
+                  className="card mb-3 single-card"
                   style={{maxWidth: '540px'}}
                   key={item.id}
                 >
@@ -56,19 +57,15 @@ export class Cart extends React.Component {
                       <div className="card-body">
                         <h5 className="card-title">{item.name}</h5>
                         <p className="card-text">
-                          ${(item.price / 100).toFixed(2)} x{' '}
-                          {item.orderHistory.quantity}
+                          Price: ${(item.price / 100).toFixed(2)}
                         </p>
-                        {/* <p className="card-text">
-                          <small className="text-muted">button</small>
-                        </p> */}
-                        <button
-                          type="button"
-                          className="delete"
+                        <p>Quantity: {item.orderHistory.quantity}</p>
+                        <Button
+                          variant="dark"
                           onClick={() => this.props.deleteItem(item.id)}
                         >
                           Remove From Cart
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -76,7 +73,20 @@ export class Cart extends React.Component {
               )
             })}
         </div>
-        <div>Total : $100</div>
+        <div className="cart-total">
+          Total Due at Checkout : $
+          {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
+        </div>
+        <Button variant="dark">
+          <Link
+            to={{
+              pathname: '/payment',
+              state: {sub: 'how can we pass this over?'}
+            }}
+          >
+            Proceed to Checkout
+          </Link>
+        </Button>
       </div>
     )
   }
@@ -97,12 +107,6 @@ const mapDispatch = dispatch => {
     deleteItem: itemId => {
       dispatch(deleteItemFromCart(itemId))
     }
-    // createCart: (userId) => {
-    //   dispatch(createNewCart(userId))
-    // },
-    // loadUser: () => {
-    //   dispatch(me())
-    // },
   }
 }
 

@@ -9,13 +9,12 @@ class AllProducts extends React.Component {
     this.props.fetchProducts()
   }
 
-  //name, image, description,button
   render() {
     const allProducts = this.props.allProducts
     return (
       <div>
         {allProducts.length ? (
-          <div style={{backgroundColor: '#c3aed6'}}>
+          <div>
             <Container>
               <Row>
                 {allProducts.map(product => {

@@ -1,7 +1,5 @@
 const router = require('express').Router()
-const {default: Axios} = require('axios')
-const {Order, OrderHistory} = require('../db/models')
-const Product = require('../db/models/product')
+const {Order} = require('../db/models')
 
 // get all orders
 router.get('/', async (req, res, next) => {
@@ -13,7 +11,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-//get single order (get cart for logged in user)
+// get single order - the cart for logged in user
 router.get('/:userId', async (req, res, next) => {
   try {
     const order = await Order.findOne({
@@ -26,24 +24,21 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-//create new order
-router.post('/', async (req, res, next) => {
-  try {
-    console.log('THIS IS REQ.BODY IN THE POST ROUTE!!!!!!', req.body)
-    const order = await Order.create({
-      subtotal: 0,
-      userId: req.body.userId
-    })
-    //await order.setUser(req.body)
-    if (order) {
-      res.send(order)
-    }
-  } catch (err) {
-    next(err)
-  }
-})
-
-//update order
-router.put('/', async (req, res, next) => {})
+// // create new order
+// router.post('/', async (req, res, next) => {
+//   try {
+//     console.log('THIS IS REQ.BODY IN THE POST ROUTE!!!!!!', req.body)
+//     const order = await Order.create({
+//       subtotal: 0,
+//       userId: req.body.userId,
+//     })
+//     //await order.setUser(req.body)
+//     if (order) {
+//       res.send(order)
+//     }
+//   } catch (err) {
+//     next(err)
+//   }
+// })
 
 module.exports = router

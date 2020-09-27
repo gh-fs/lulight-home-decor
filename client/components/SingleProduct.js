@@ -15,8 +15,8 @@ class SingleProduct extends React.Component {
     if (product.id) {
       const productPrice = (product.price / 100).toFixed(2)
       return (
-        <div className="single-product">
-          <Card style={{width: '30rem'}}>
+        <div>
+          <Card className="single-product" style={{width: '20rem'}}>
             <Card.Img variant="top" src={product.image} />
             <Card.Body>
               <Card.Title>{product.name}</Card.Title>
@@ -28,7 +28,7 @@ class SingleProduct extends React.Component {
               </Card.Text>
 
               <Button
-                variant="primary"
+                variant="dark"
                 onClick={() => {
                   this.props.addProduct(product.id, this.props.user.id)
                 }}
