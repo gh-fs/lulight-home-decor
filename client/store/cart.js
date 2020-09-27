@@ -16,6 +16,7 @@ const addProductToCart = product => ({
   type: ADD_PRODUCT_TO_CART,
   product
 })
+
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {

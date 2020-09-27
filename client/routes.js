@@ -10,6 +10,7 @@ import Cart from './components/cart'
 import PaymentInfo from './components/PaymentInfo'
 import ThankYou from './components/ThankYou'
 import {getCartFromServer} from './store/cart'
+import GuestCart from './components/GuestCart'
 
 /**
  * COMPONENT
@@ -38,6 +39,7 @@ class Routes extends Component {
         <Route path="/payment" component={PaymentInfo} />
         <Route path="/thankyou" component={ThankYou} />
         <Route path="/cart" component={Cart} />
+        <Route path="/guestcart" component={GuestCart} />
 
         {isLoggedIn && (
           <Switch>
