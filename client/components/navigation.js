@@ -21,10 +21,13 @@ class Navigation extends React.Component {
                   Home
                 </Nav.Link>
                 <Nav.Link as={Link} to="/products">
-                  All Products
+                  Our Products
                 </Nav.Link>
                 <Nav.Link as={Link} to="/cart">
-                  Cart({this.props.cart.length})
+                  Cart ({this.props.cart.length})
+                </Nav.Link>
+                <Nav.Link as={Link} to="/users">
+                  View Users
                 </Nav.Link>
                 <Nav.Link as={Link} to="#" onClick={this.props.handleClick}>
                   Logout
@@ -41,9 +44,13 @@ class Navigation extends React.Component {
                 <Nav.Link as={Link} to="/products">
                   All Products
                 </Nav.Link>
+                <Nav.Link as={Link} to="/guestcart">
+                  GuestCart({this.props.guestCart.length})
+                </Nav.Link>
                 <Nav.Link as={Link} to="/login">
                   Login
                 </Nav.Link>
+
                 <Nav.Link as={Link} to="/signup">
                   Sign Up
                 </Nav.Link>
@@ -59,7 +66,8 @@ class Navigation extends React.Component {
 const mapState = state => {
   return {
     isLoggedIn: !!state.user.id,
-    cart: state.cart
+    cart: state.cart,
+    guestCart: state.guestCart
   }
 }
 

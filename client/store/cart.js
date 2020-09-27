@@ -1,9 +1,9 @@
 import axios from 'axios'
-import {Next} from 'react-bootstrap/esm/PageItem'
+
 //action types
-let GET_CART_FROM_SERVER = 'GET_CART_FROM_SERVER'
-let SET_CART = 'SET_CART'
-let CREATE_NEW_CART = 'CREATE_NEW_CART'
+const SET_CART = 'SET_CART'
+const ADD_ITEM = 'ADD_ITEM'
+const DELETE_ITEM = 'DELETE_ITEM'
 
 //action creators
 const setCart = order => ({
@@ -11,23 +11,23 @@ const setCart = order => ({
   order
 })
 
+const addItem = order => ({
+  type: SET_CART,
+  order
+})
+
+const deleteItem = productId => ({
+  type: DELETE_ITEM,
+  productId
+})
+
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {
     try {
-      // console.log('we are in the reducer')
-      // console.log(userId)
       const response = await axios.get(`api/orders/${userId}`)
-      // console.log('order with joint table', order)
-      // console.log(order.products)
-
-      if (response.data) {
-        let order = response.data
-        dispatch(setCart(order.products))
-      } else {
-        console.log('NO cart before')
-        dispatch(createNewCart(userId))
-      }
+      let order = response.data
+      dispatch(setCart(order.products))
     } catch (err) {
       //console.error(err)
       console.log('error occurred with getCartFromServer thunk creator')
@@ -35,15 +35,22 @@ export const getCartFromServer = userId => {
   }
 }
 
-export const createNewCart = userId => {
+export const addProductToServCart = (productId, userId) => {
   return async dispatch => {
-    try {
-      // console.log(userId)
-      const {data: newCart} = await axios.post('/api/orders', {userId})
-      dispatch(setCart(newCart))
-    } catch (err) {
-      console.log(err)
-    }
+    const response = await axios.put(`/api/products/${productId}`, {
+      userId: userId,
+      productId: productId
+    })
+    const updatedOrder = response.data
+    console.log('order returned from add to cart', updatedOrder)
+    dispatch(addItem(updatedOrder.products))
+  }
+}
+
+export const deleteItemFromCart = productId => {
+  return async dispatch => {
+    await axios.delete(`/api/products/${productId}`)
+    dispatch(deleteItem(productId))
   }
 }
 
@@ -52,10 +59,11 @@ const initialState = []
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case SET_CART:
-      // let res = [...state, action.order]
-      // console.log('current state of cart', res)
-      // return res
       return action.order
+    case ADD_ITEM:
+      return action.order
+    case DELETE_ITEM:
+      return [...state].filter(product => product.id !== action.productId)
     default:
       return state
   }

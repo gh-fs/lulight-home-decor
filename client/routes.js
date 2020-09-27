@@ -10,17 +10,19 @@ import Cart from './components/cart'
 import PaymentInfo from './components/PaymentInfo'
 import ThankYou from './components/ThankYou'
 import {getCartFromServer} from './store/cart'
+import GuestCart from './components/GuestCart'
+import AllUsers from './components/AllUsers'
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
-  async componentDidMount() {
+  componentDidMount() {
     this.props.loadInitialData()
 
-    if (this.props.user.id) {
-      await this.props.loadCart(this.props.user.id)
-    }
+    // if (this.props.user.id) {
+    //   await this.props.loadCart(this.props.user.id)
+    // }
   }
 
   render() {
@@ -37,15 +39,16 @@ class Routes extends Component {
         <Route path="/products" component={AllProducts} />
         <Route path="/payment" component={PaymentInfo} />
         <Route path="/thankyou" component={ThankYou} />
-        <Route path="/cart" component={Cart} />
+        <Route path="/guestcart" component={GuestCart} />
 
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
-            {/* <Route path="/cart" component={Cart} />
+            <Route path="/cart" component={Cart} />
             <Route path="/payment" component={PaymentInfo} />
-            <Routes path="/thankyou" componenet={ThankYou} /> */}
+            <Routes path="/thankyou" component={ThankYou} />
+            <Route path="/users" component={AllUsers} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}

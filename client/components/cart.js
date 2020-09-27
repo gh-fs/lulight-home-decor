@@ -1,89 +1,92 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {createNewCart, getCartFromServer} from '../store/cart'
-import {me} from '../store/user'
-
-// export function Cart(props) {
-//   let user = props.user
-//   props.loadCart(user.id)
-
-//   let currentCart = props.cart
-//   return (
-//     <div>
-//       <div>Cart Items (from functional component):</div>
-//       {currentCart.map((item) => {
-//         return <li key={item.id}>{item.name}</li>
-//       })}
-//     </div>
-//   )
-// }
+import {Button} from 'react-bootstrap'
+import {getCartFromServer, deleteItemFromCart} from '../store/cart'
+import {Link} from 'react-router-dom'
 
 export class Cart extends React.Component {
-  // const removeFromCart = (product) => {
-  //   const currentItem = this.state.currentCart.slice();
-  //   currentItem.filter(x=>x.id !== product.id)
-  // }
+  constructor() {
+    super()
+    this.calTotal = this.calTotal.bind(this)
+  }
 
   async componentDidMount() {
-    // console.log('props in componentDidMount', this.props)
-    // let user = this.props.user
-    // if (user.id) {
-    //   await this.props.loadCart(user.id)
-    // }
-    await this.props.loadCart(this.props.user.id)
+    if (this.props.user.id) {
+      await this.props.loadCart(this.props.user.id)
+    }
   }
-  render() {
-    // console.log('user in render of cart component', this.props.user)
-    // console.log('cart in render of cart component', this.props.cart)
-    let currentCart = this.props.cart
 
+  calTotal(arr) {
+    let checkoutTotal = arr.reduce(
+      (total, item) => total + item.price * item.orderHistory.quantity,
+      0
+    )
+    return (checkoutTotal / 100).toFixed(2)
+  }
+
+  render() {
+    let currentCart = this.props.cart
+    console.log('current cart', currentCart)
     return (
-      // <div>
-      //   <div>Cart Items (from class component):</div>
-      //   {currentCart &&
-      //     currentCart.map(item => {
-      //       return <li key={item.id}>{item.name}</li>
-      //     })}
-      // </div>
-      <div>
+      <div className="whole-cart">
         {currentCart.length === 0 ? (
-          <div className="cart cart-header">Cart is empty</div>
+          <div className="cart cart-header">Your cart is empty</div>
         ) : (
           <div className="cart cart-header">
-            You have {currentCart.length} products in the cart
+            There are {currentCart.length} products in your cart
           </div>
         )}
         <div>
-          <div className="cart">
-            <ul className="cart-items">
-              {currentCart &&
-                currentCart.map(item => (
-                  <li key={item.id}>
-                    <div>
-                      <img src={item.image} alt={item.name} />
+          {currentCart &&
+            currentCart.map(item => {
+              return (
+                <div
+                  className="card mb-3 single-card"
+                  style={{maxWidth: '540px'}}
+                  key={item.id}
+                >
+                  <div className="row no-gutters">
+                    <div className="col-md-4">
+                      <img
+                        src={item.image}
+                        className="card-img"
+                        alt={item.name}
+                      />
                     </div>
-                    <div>{item.name}</div>
-                    <div className="right">
-                      ${item.price} x {item.count}
-                      <button
-                        className="button" /*onClick={() => this.props.removeFromCart(item)}*/
-                      >
-                        Remove
-                      </button>
+                    <div className="col-md-8">
+                      <div className="card-body">
+                        <h5 className="card-title">{item.name}</h5>
+                        <p className="card-text">
+                          Price: ${(item.price / 100).toFixed(2)}
+                        </p>
+                        <p>Quantity: {item.orderHistory.quantity}</p>
+                        <Button
+                          variant="dark"
+                          onClick={() => this.props.deleteItem(item.id)}
+                        >
+                          Remove From Cart
+                        </Button>
+                      </div>
                     </div>
-                  </li>
-                ))}
-            </ul>
-          </div>
-          <div className="cart">
-            <div className="total">
-              <div>Total: 0</div>
-            </div>
-            <div>
-              <button className="button primary">Proceed</button>
-            </div>
-          </div>
+                  </div>
+                </div>
+              )
+            })}
         </div>
+        <div className="cart-total">
+          Total Due at Checkout : $
+          {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
+        </div>
+        <Button variant="dark">
+          <Link
+            to={{
+              pathname: '/payment',
+              state: {sub: 'how can we pass this over?'}
+            }}
+          >
+            Proceed to Checkout
+          </Link>
+        </Button>
       </div>
     )
   }
@@ -92,8 +95,7 @@ export class Cart extends React.Component {
 const mapState = state => {
   return {
     cart: state.cart,
-    user: state.user,
-    allProducts: state.allProducts
+    user: state.user
   }
 }
 
@@ -101,13 +103,10 @@ const mapDispatch = dispatch => {
   return {
     loadCart: userId => {
       dispatch(getCartFromServer(userId))
+    },
+    deleteItem: itemId => {
+      dispatch(deleteItemFromCart(itemId))
     }
-    // createCart: (userId) => {
-    //   dispatch(createNewCart(userId))
-    // },
-    // loadUser: () => {
-    //   dispatch(me())
-    // },
   }
 }
 

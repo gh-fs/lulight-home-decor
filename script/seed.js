@@ -76,7 +76,7 @@ async function seed() {
       reviews: ''
     }),
     Product.create({
-      name: 'Towel bar with Shelf',
+      name: 'Towel Bar with Shelf',
       description:
         'Towel Bar with Shelf and Extra Floating Shelf, Industrial, Modern, Rustic Towel Holder, Bathroom Shelf, Bathroom Decor, Shelves',
       image:
@@ -98,7 +98,7 @@ async function seed() {
       reviews: ''
     }),
     Product.create({
-      name: 'Reclaimed wood Light Fixture',
+      name: 'Reclaimed Wood Light Fixture',
       description:
         'RECLAIMED WOOD Vanity Light Fixture, 4 Cages Light Fixture, Light With Shade, Wall Light, Pendant Light, Bathroom Rustic Industrial Lights',
       image:
@@ -109,7 +109,7 @@ async function seed() {
       reviews: ''
     }),
     Product.create({
-      name: 'Mason jar Light Fixture',
+      name: 'Mason Jar Light Fixture',
       description:
         'RUSTIC DISTRESSED mason jar light fixture, 3 mason jars light, industrial lights, modern light, vanity light, wall fixture, bathroom light',
       image:
