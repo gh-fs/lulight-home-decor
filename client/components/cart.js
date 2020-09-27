@@ -8,12 +8,22 @@ export class Cart extends React.Component {
   constructor() {
     super()
     this.calTotal = this.calTotal.bind(this)
+    this.calQuantity = this.calQuantity.bind(this)
   }
 
   async componentDidMount() {
     if (this.props.user.id) {
       await this.props.loadCart(this.props.user.id)
     }
+  }
+
+  calQuantity(arr) {
+    // console.log(item)
+    let totalQuantity = arr.reduce((total, item) => {
+      return total + item.orderHistory.quantity
+    }, 0)
+
+    return totalQuantity
   }
 
   calTotal(arr) {
@@ -33,7 +43,9 @@ export class Cart extends React.Component {
           <div className="cart cart-header">Your cart is empty</div>
         ) : (
           <div className="cart cart-header">
-            There are {currentCart.length} products in your cart
+            There are{' '}
+            {this.props.cart.length ? this.calQuantity(this.props.cart) : 0}{' '}
+            products in your cart
           </div>
         )}
         <div>

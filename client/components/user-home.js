@@ -2,12 +2,20 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Carousel} from 'react-bootstrap'
+import {getCartFromServer} from '../store/cart'
+import {getCartFromLocalStorage} from '../store/guestCart'
 
 /**
  * COMPONENT
  */
 export const UserHome = props => {
   const {email} = props
+  console.log('props in home page', props)
+  if (props.userID) {
+    props.loadCart(props.userID)
+  } else {
+    props.loadGuestCart()
+  }
 
   if (email) {
     return (
@@ -105,11 +113,23 @@ export const UserHome = props => {
  */
 const mapState = state => {
   return {
-    email: state.user.email
+    email: state.user.email,
+    userID: state.user.id
   }
 }
 
-export default connect(mapState)(UserHome)
+const mapDispatch = dispatch => {
+  return {
+    loadCart: function(userId) {
+      dispatch(getCartFromServer(userId))
+    },
+    loadGuestCart: function() {
+      dispatch(getCartFromLocalStorage())
+    }
+  }
+}
+
+export default connect(mapState, mapDispatch)(UserHome)
 
 /**
  * PROP TYPES
