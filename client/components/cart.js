@@ -41,6 +41,7 @@ export class Cart extends React.Component {
   render() {
     let currentCart = this.props.cart
     console.log('current cart', currentCart)
+    console.log('did this work?')
     return (
       <div className="whole-cart">
         {currentCart.length === 0 ? (
@@ -87,7 +88,13 @@ export class Cart extends React.Component {
                           >
                             +
                           </Button>
-                          <Button>-</Button>
+                          <Button
+                            onClick={() =>
+                              this.props.deleteItemFromCart(item.id)
+                            }
+                          >
+                            -
+                          </Button>
                         </div>
                         <Button
                           variant="dark"
@@ -107,14 +114,7 @@ export class Cart extends React.Component {
           {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
         </div>
         <Button variant="dark">
-          <Link
-            to={{
-              pathname: '/payment',
-              state: {sub: 'how can we pass this over?'}
-            }}
-          >
-            Proceed to Checkout
-          </Link>
+          <Link to="/payment">Proceed to Checkout</Link>
         </Button>
       </div>
     )
@@ -138,6 +138,9 @@ const mapDispatch = dispatch => {
     },
     addProductToServCart: (itemId, userId) => {
       dispatch(addProductToServCart(itemId, userId))
+    },
+    deleteItemFromCart: itemId => {
+      dispatch(deleteItemFromCart(itemId))
     }
   }
 }

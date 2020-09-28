@@ -4,6 +4,7 @@ import axios from 'axios'
 const SET_CART = 'SET_CART'
 const ADD_ITEM = 'ADD_ITEM'
 const DELETE_ITEM = 'DELETE_ITEM'
+const CLEAR_CART = 'CLEAR_CART'
 
 //action creators
 const setCart = order => ({
@@ -21,6 +22,11 @@ const deleteItem = productId => ({
   productId
 })
 
+const clearCart = emptyCart => ({
+  type: CLEAR_CART,
+  emptyCart
+})
+
 //thunk creators
 export const getCartFromServer = userId => {
   return async dispatch => {
@@ -29,7 +35,6 @@ export const getCartFromServer = userId => {
       let order = response.data
       dispatch(setCart(order.products))
     } catch (err) {
-      //console.error(err)
       console.log('error occurred with getCartFromServer thunk creator')
     }
   }
@@ -49,10 +54,32 @@ export const addProductToServCart = (productId, userId) => {
 
 export const deleteItemFromCart = productId => {
   return async dispatch => {
-    await axios.delete(`/api/products/${productId}`)
-    dispatch(deleteItem(productId))
+    const {data} = await axios.delete(`/api/products/${productId}`)
+    dispatch(setCart(data.products))
+    // dispatch(deleteItem(productId))
   }
 }
+
+export const submitOrder = userId => {
+  if (!userId) {
+    console.log('this cart belongs to a guest')
+    // return async (dispatch) => {
+    //   await axios.post(`/api/orders/`)
+    //   dispatch(clearCart([]))
+    // }
+  } else {
+    return async dispatch => {
+      await axios.put(`/api/orders/${userId}`)
+      dispatch(clearCart([]))
+    }
+  }
+}
+// export const removeItemFromCart = productId => {
+//   return async dispatch => {
+//     await axios.delete(`/api/products/${productId}`)
+//     dispatch(deleteItem(productId))
+//   }
+// }
 
 const initialState = []
 
@@ -64,6 +91,8 @@ export default function cartReducer(state = initialState, action) {
       return action.order
     case DELETE_ITEM:
       return [...state].filter(product => product.id !== action.productId)
+    case CLEAR_CART:
+      return action.emptyCart
     default:
       return state
   }

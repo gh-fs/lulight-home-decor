@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {Link} from 'react-router-dom'
 import {getCartFromLocalStorage} from '../store/guestCart'
-import {Container} from 'react-bootstrap'
+import {Container, Button} from 'react-bootstrap'
 
 //if not logged in, got to /guestcart
 class GuestCart extends React.Component {
@@ -32,6 +33,9 @@ class GuestCart extends React.Component {
               </Container>
             )
           })}
+          <Button variant="dark">
+            <Link to="/payment">Proceed to Checkout</Link>
+          </Button>
         </div>
       )
     } else {
