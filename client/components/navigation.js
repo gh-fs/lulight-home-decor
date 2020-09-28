@@ -23,7 +23,7 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.cart)
+    // console.log(this.props.cart)
     return (
       <div>
         <Navbar bg="dark" variant="dark">

@@ -5,6 +5,7 @@ import {Container} from 'react-bootstrap'
 
 //if not logged in, got to /guestcart
 class GuestCart extends React.Component {
+  //constructor
   componentDidMount() {
     this.props.loadGuestCart()
   }
@@ -16,23 +17,49 @@ class GuestCart extends React.Component {
     } else {
       LocalStorageCart = []
     }
-    console.log('guestCart load success in page?', LocalStorageCart)
+    //[{},{}]
+    // console.log('guestCart load success in page?', LocalStorageCart)
+    let uniqueArr = []
+    let quantityObj = {}
+
+    for (let item of LocalStorageCart) {
+      //for quantity obj store repeat item
+      if (item.name in quantityObj) {
+        // console.log(quantityObj[item.name])
+        quantityObj[item.name] = quantityObj[item.name] + 1
+      } else {
+        quantityObj[item.name] = 1
+      }
+      //only push a product one time
+      //need to use item.name since in the product object (from db) has createAt...
+      //make each product in the array different item even they have same name
+      if (!uniqueArr.includes(item.name)) {
+        uniqueArr.push(item.name)
+      }
+    }
+    // console.log(quantityObj)
+    // console.log(uniqueArr)
+
     if (LocalStorageCart.length) {
       return (
-        <div>
-          {LocalStorageCart.map((item, idx) => {
-            return (
-              <Container key={idx}>
-                <div>
-                  <h3>{item.name}</h3>
-                  <h3>+</h3>
-                  <input type="text" value="1" />
-                  <h3>-</h3>
-                </div>
-              </Container>
-            )
-          })}
-        </div>
+        <Container>
+          <div>
+            {uniqueArr.map((item, idx) => {
+              return (
+                <Container key={idx}>
+                  <div>
+                    <h3>{item}</h3>
+                    <button>+</button>
+                    <input type="text" value={quantityObj[item]} />
+                    <button>-</button>
+                    <br />
+                    <button>Remove from cart</button>
+                  </div>
+                </Container>
+              )
+            })}
+          </div>
+        </Container>
       )
     } else {
       return (

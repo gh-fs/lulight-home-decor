@@ -15,18 +15,18 @@ class SingleProduct extends React.Component {
     this.addProductToGuestCart = this.addProductToGuestCart.bind(this)
   }
   async componentDidMount() {
-    console.log('have user logged in?', this.props.user)
+    // console.log('have user logged in?', this.props.user)
     await this.props.loadSingleProductInReact(this.props.match.params.id)
     if (!this.props.user.id) {
       //even no user will load guestcart?
       await this.props.loadGuestCart()
 
-      console.log('no user, this is guest cart', this.props.guestCart)
+      // console.log('no user, this is guest cart', this.props.guestCart)
     }
   }
 
   async addProductToGuestCart(productId) {
-    console.log('before add new item : ', this.props.guestCart)
+    // console.log('before add new item : ', this.props.guestCart)
 
     await this.props.addProductToGuestCartInReact(productId)
 
@@ -35,8 +35,9 @@ class SingleProduct extends React.Component {
     //2:get guestCart with new add product (refreshedcart)
     //3:set localStorage.guestCart to JSON.parse(refreshedcart)
     //problem is this.props.guestCart is still empty after add product
-    console.log('after add new item', this.props.guestCart)
+    // console.log('after add new item', this.props.guestCart)
     const currentProduct = await axios.get(`/api/products/${productId}`)
+
     const JSONready = JSON.stringify([...this.props.guestCart])
     localStorage.setItem('guestCart', JSONready)
   }
