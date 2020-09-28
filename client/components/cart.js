@@ -1,7 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
-import {getCartFromServer, deleteItemFromCart} from '../store/cart'
+import {
+  getCartFromServer,
+  deleteItemFromCart,
+  addProductToServCart
+} from '../store/cart'
 import {Link} from 'react-router-dom'
 
 export class Cart extends React.Component {
@@ -71,7 +75,20 @@ export class Cart extends React.Component {
                         <p className="card-text">
                           Price: ${(item.price / 100).toFixed(2)}
                         </p>
-                        <p>Quantity: {item.orderHistory.quantity}</p>
+                        <div>
+                          <p>Quantity: {item.orderHistory.quantity}</p>
+                          <Button
+                            onClick={() =>
+                              this.props.addProductToServCart(
+                                item.id,
+                                this.props.userId
+                              )
+                            }
+                          >
+                            +
+                          </Button>
+                          <Button>-</Button>
+                        </div>
                         <Button
                           variant="dark"
                           onClick={() => this.props.deleteItem(item.id)}
@@ -118,6 +135,9 @@ const mapDispatch = dispatch => {
     },
     deleteItem: itemId => {
       dispatch(deleteItemFromCart(itemId))
+    },
+    addProductToServCart: (itemId, userId) => {
+      dispatch(addProductToServCart(itemId, userId))
     }
   }
 }
