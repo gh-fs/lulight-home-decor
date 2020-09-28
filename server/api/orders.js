@@ -24,21 +24,35 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
-// // create new order
-// router.post('/', async (req, res, next) => {
-//   try {
-//     console.log('THIS IS REQ.BODY IN THE POST ROUTE!!!!!!', req.body)
-//     const order = await Order.create({
-//       subtotal: 0,
-//       userId: req.body.userId,
-//     })
-//     //await order.setUser(req.body)
-//     if (order) {
-//       res.send(order)
-//     }
-//   } catch (err) {
-//     next(err)
-//   }
-// })
+// create new order
+router.post('/', async (req, res, next) => {
+  try {
+    console.log('THIS IS REQ.BODY IN THE POST ROUTE!!!!!!', req.body)
+    const order = await Order.create({
+      subtotal: 0,
+      userId: req.body.userId
+    })
+    await order.setUser(req.body)
+    // if (order) {
+    //   res.send(order)
+    // }
+  } catch (err) {
+    next(err)
+  }
+})
+
+// submit order
+router.put('/:userId', async (req, res, next) => {
+  try {
+    const currentOrder = await Order.findOne({
+      where: {userId: req.params.userId, completed: false},
+      include: [{all: true}]
+    })
+    await currentOrder.update({completed: true})
+    res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
+})
 
 module.exports = router

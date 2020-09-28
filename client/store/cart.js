@@ -4,6 +4,7 @@ import axios from 'axios'
 const SET_CART = 'SET_CART'
 const ADD_ITEM = 'ADD_ITEM'
 const DELETE_ITEM = 'DELETE_ITEM'
+const CLEAR_CART = 'CLEAR_CART'
 
 //action creators
 const setCart = order => ({
@@ -19,6 +20,11 @@ const addItem = order => ({
 const deleteItem = productId => ({
   type: DELETE_ITEM,
   productId
+})
+
+const clearCart = emptyCart => ({
+  type: CLEAR_CART,
+  emptyCart
 })
 
 //thunk creators
@@ -54,6 +60,21 @@ export const deleteItemFromCart = productId => {
   }
 }
 
+export const submitOrder = userId => {
+  if (!userId) {
+    console.log('this cart belongs to a guest')
+    // return async (dispatch) => {
+    //   await axios.post(`/api/orders/`)
+    //   dispatch(clearCart([]))
+    // }
+  } else {
+    return async dispatch => {
+      await axios.put(`/api/orders/${userId}`)
+      dispatch(clearCart([]))
+    }
+  }
+}
+
 const initialState = []
 
 export default function cartReducer(state = initialState, action) {
@@ -64,6 +85,8 @@ export default function cartReducer(state = initialState, action) {
       return action.order
     case DELETE_ITEM:
       return [...state].filter(product => product.id !== action.productId)
+    case CLEAR_CART:
+      return action.emptyCart
     default:
       return state
   }

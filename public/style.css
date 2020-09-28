@@ -82,3 +82,9 @@ form div {
 .d-block {
   height: 85vh;
 }
+
+.user-table {
+  background-color: white;
+  width: 50%;
+  margin: 10px;
+}

@@ -107,14 +107,7 @@ export class Cart extends React.Component {
           {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
         </div>
         <Button variant="dark">
-          <Link
-            to={{
-              pathname: '/payment',
-              state: {sub: 'how can we pass this over?'}
-            }}
-          >
-            Proceed to Checkout
-          </Link>
+          <Link to="/payment">Proceed to Checkout</Link>
         </Button>
       </div>
     )
