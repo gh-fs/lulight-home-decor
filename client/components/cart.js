@@ -41,6 +41,7 @@ export class Cart extends React.Component {
   render() {
     let currentCart = this.props.cart
     console.log('current cart', currentCart)
+    console.log('did this work?')
     return (
       <div className="whole-cart">
         {currentCart.length === 0 ? (
