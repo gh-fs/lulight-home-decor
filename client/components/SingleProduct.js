@@ -43,7 +43,6 @@ class SingleProduct extends React.Component {
 
   render() {
     const product = this.props.singleProductInReact
-
     if (product.id) {
       const productPrice = (product.price / 100).toFixed(2)
       return (
@@ -56,6 +55,9 @@ class SingleProduct extends React.Component {
                 Description: {product.description}
                 <br />
                 <br />
+                <div>
+                  Status: {product.inventory > 0 ? 'In stock' : 'Unavailable'}
+                </div>
                 Price: ${productPrice}
               </Card.Text>
               {this.props.user.id ? (
