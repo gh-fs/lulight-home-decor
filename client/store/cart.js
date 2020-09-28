@@ -35,7 +35,6 @@ export const getCartFromServer = userId => {
       let order = response.data
       dispatch(setCart(order.products))
     } catch (err) {
-      //console.error(err)
       console.log('error occurred with getCartFromServer thunk creator')
     }
   }
@@ -55,8 +54,9 @@ export const addProductToServCart = (productId, userId) => {
 
 export const deleteItemFromCart = productId => {
   return async dispatch => {
-    await axios.delete(`/api/products/${productId}`)
-    dispatch(deleteItem(productId))
+    const {data} = await axios.delete(`/api/products/${productId}`)
+    dispatch(setCart(data.products))
+    // dispatch(deleteItem(productId))
   }
 }
 
@@ -74,6 +74,12 @@ export const submitOrder = userId => {
     }
   }
 }
+// export const removeItemFromCart = productId => {
+//   return async dispatch => {
+//     await axios.delete(`/api/products/${productId}`)
+//     dispatch(deleteItem(productId))
+//   }
+// }
 
 const initialState = []
 

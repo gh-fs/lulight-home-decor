@@ -88,7 +88,13 @@ export class Cart extends React.Component {
                           >
                             +
                           </Button>
-                          <Button>-</Button>
+                          <Button
+                            onClick={() =>
+                              this.props.deleteItemFromCart(item.id)
+                            }
+                          >
+                            -
+                          </Button>
                         </div>
                         <Button
                           variant="dark"
@@ -132,6 +138,9 @@ const mapDispatch = dispatch => {
     },
     addProductToServCart: (itemId, userId) => {
       dispatch(addProductToServCart(itemId, userId))
+    },
+    deleteItemFromCart: itemId => {
+      dispatch(deleteItemFromCart(itemId))
     }
   }
 }
