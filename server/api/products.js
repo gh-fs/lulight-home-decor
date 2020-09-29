@@ -74,20 +74,21 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
-// delete product from cart
+// decrease quantity of product in cart
 router.delete('/:id', async (req, res, next) => {
   try {
     const existingOrder = await Order.findOne({
       where: {userId: req.user.id, completed: false},
       include: [{all: true}]
     })
+
     const productAlreadyInCart = await OrderHistory.findOne({
       where: {
         productId: req.params.id,
         orderId: existingOrder.id
       }
     })
-    console.log('productAlreadyInCart', productAlreadyInCart)
+
     if (productAlreadyInCart.quantity === 1) {
       await OrderHistory.destroy({
         where: {
@@ -95,19 +96,39 @@ router.delete('/:id', async (req, res, next) => {
           orderId: existingOrder.id
         }
       })
-      // res.sendStatus(204)
     } else {
       await productAlreadyInCart.update({
         quantity: productAlreadyInCart.quantity - 1
       })
       await existingOrder.reload()
     }
+
     const orderToReturn = await Order.findOne({
       where: {userId: req.user.id, completed: false},
       include: [{all: true}]
     })
     res.json(orderToReturn)
-    // res.sendStatus(204)
+  } catch (err) {
+    next(err)
+  }
+})
+
+// remove item from cart
+router.delete('/remove/:id', async (req, res, next) => {
+  try {
+    const existingOrder = await Order.findOne({
+      where: {userId: req.user.id, completed: false},
+      include: [{all: true}]
+    })
+
+    await OrderHistory.destroy({
+      where: {
+        productId: req.params.id,
+        orderId: existingOrder.id
+      }
+    })
+
+    res.sendStatus(204)
   } catch (err) {
     next(err)
   }

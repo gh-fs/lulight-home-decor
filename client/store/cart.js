@@ -40,6 +40,13 @@ export const getCartFromServer = userId => {
   }
 }
 
+export const removeItemFromCart = productId => {
+  return async dispatch => {
+    await axios.delete(`/api/products/remove/${productId}`)
+    dispatch(deleteItem(productId))
+  }
+}
+
 export const addProductToServCart = (productId, userId) => {
   return async dispatch => {
     const response = await axios.put(`/api/products/${productId}`, {
@@ -52,11 +59,10 @@ export const addProductToServCart = (productId, userId) => {
   }
 }
 
-export const deleteItemFromCart = productId => {
+export const decreaseInCart = productId => {
   return async dispatch => {
     const {data} = await axios.delete(`/api/products/${productId}`)
     dispatch(setCart(data.products))
-    // dispatch(deleteItem(productId))
   }
 }
 
@@ -74,12 +80,6 @@ export const submitOrder = userId => {
     }
   }
 }
-// export const removeItemFromCart = productId => {
-//   return async dispatch => {
-//     await axios.delete(`/api/products/${productId}`)
-//     dispatch(deleteItem(productId))
-//   }
-// }
 
 const initialState = []
 
