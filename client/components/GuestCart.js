@@ -70,6 +70,7 @@ class GuestCart extends React.Component {
 
     if (LocalStorageCart.length) {
       return (
+<<<<<<< HEAD
         <Container>
           <div>
             {LocalStorageCart.map(item => {
@@ -95,6 +96,25 @@ class GuestCart extends React.Component {
             })}
           </div>
         </Container>
+=======
+        <div>
+          {LocalStorageCart.map((item, idx) => {
+            return (
+              <Container key={idx}>
+                <div>
+                  <h3>{item.name}</h3>
+                  <h3>+</h3>
+                  <input type="text" value="1" />
+                  <h3>-</h3>
+                </div>
+              </Container>
+            )
+          })}
+          <Button variant="dark">
+            <Link to="/payment">Proceed to Checkout</Link>
+          </Button>
+        </div>
+>>>>>>> 8120c86aa5d4c224668a9b7dfb41cf29f9a2d364
       )
     } else {
       return (

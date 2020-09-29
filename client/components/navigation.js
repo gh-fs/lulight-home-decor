@@ -53,9 +53,11 @@ class Navigation extends React.Component {
                     : 0}
                   )
                 </Nav.Link>
-                <Nav.Link as={Link} to="/users">
-                  View Users
-                </Nav.Link>
+                {this.props.isAdmin && (
+                  <Nav.Link as={Link} to="/users">
+                    View Users
+                  </Nav.Link>
+                )}
                 <Nav.Link as={Link} to="#" onClick={this.props.handleClick}>
                   Logout
                 </Nav.Link>
@@ -97,6 +99,7 @@ class Navigation extends React.Component {
 const mapState = state => {
   return {
     isLoggedIn: !!state.user.id,
+    isAdmin: state.user.isAdmin,
     cart: state.cart,
     guestCart: state.guestCart
   }

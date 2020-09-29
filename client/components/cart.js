@@ -3,8 +3,9 @@ import {connect} from 'react-redux'
 import {Button} from 'react-bootstrap'
 import {
   getCartFromServer,
-  deleteItemFromCart,
-  addProductToServCart
+  removeItemFromCart,
+  addProductToServCart,
+  decreaseInCart
 } from '../store/cart'
 import {Link} from 'react-router-dom'
 
@@ -22,7 +23,6 @@ export class Cart extends React.Component {
   }
 
   calQuantity(arr) {
-    // console.log(item)
     let totalQuantity = arr.reduce((total, item) => {
       return total + item.orderHistory.quantity
     }, 0)
@@ -41,6 +41,7 @@ export class Cart extends React.Component {
   render() {
     let currentCart = this.props.cart
     console.log('current cart', currentCart)
+    console.log('did this work?')
     return (
       <div className="whole-cart">
         {currentCart.length === 0 ? (
@@ -76,22 +77,33 @@ export class Cart extends React.Component {
                           Price: ${(item.price / 100).toFixed(2)}
                         </p>
                         <div>
-                          <p>Quantity: {item.orderHistory.quantity}</p>
-                          <Button
-                            onClick={() =>
-                              this.props.addProductToServCart(
-                                item.id,
-                                this.props.userId
-                              )
-                            }
-                          >
-                            +
-                          </Button>
-                          <Button>-</Button>
+                          <p>
+                            Quantity:{' '}
+                            <Button
+                              variant="dark"
+                              size="sm"
+                              onClick={() => this.props.decreaseInCart(item.id)}
+                            >
+                              -
+                            </Button>{' '}
+                            {item.orderHistory.quantity}{' '}
+                            <Button
+                              variant="dark"
+                              size="sm"
+                              onClick={() =>
+                                this.props.addProductToServCart(
+                                  item.id,
+                                  this.props.userId
+                                )
+                              }
+                            >
+                              +
+                            </Button>
+                          </p>
                         </div>
                         <Button
                           variant="dark"
-                          onClick={() => this.props.deleteItem(item.id)}
+                          onClick={() => this.props.removeFromCart(item.id)}
                         >
                           Remove From Cart
                         </Button>
@@ -107,14 +119,7 @@ export class Cart extends React.Component {
           {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
         </div>
         <Button variant="dark">
-          <Link
-            to={{
-              pathname: '/payment',
-              state: {sub: 'how can we pass this over?'}
-            }}
-          >
-            Proceed to Checkout
-          </Link>
+          <Link to="/payment">Proceed to Checkout</Link>
         </Button>
       </div>
     )
@@ -133,11 +138,14 @@ const mapDispatch = dispatch => {
     loadCart: userId => {
       dispatch(getCartFromServer(userId))
     },
-    deleteItem: itemId => {
-      dispatch(deleteItemFromCart(itemId))
+    removeFromCart: itemId => {
+      dispatch(removeItemFromCart(itemId))
     },
     addProductToServCart: (itemId, userId) => {
       dispatch(addProductToServCart(itemId, userId))
+    },
+    decreaseInCart: itemId => {
+      dispatch(decreaseInCart(itemId))
     }
   }
 }
