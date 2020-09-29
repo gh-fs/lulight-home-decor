@@ -5,12 +5,27 @@ import {Link} from 'react-router-dom'
 import {submitOrder} from '../store/cart'
 
 export class PaymentInfo extends React.Component {
+  constructor() {
+    super()
+    this.calTotal = this.calTotal.bind(this)
+  }
+
+  calTotal(arr) {
+    let checkoutTotal = arr.reduce(
+      (total, item) => total + item.price * item.orderHistory.quantity,
+      0
+    )
+    return (checkoutTotal / 100).toFixed(2)
+  }
+
   render() {
-    console.log(this.props.userId)
     return (
       <div>
         <Container style={{margin: '20px 20% 10px 20% '}}>
-          <h1>Total payment due: </h1>
+          <h1>
+            Total payment due: $
+            {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
+          </h1>
 
           <Form>
             <Form.Group controlId="formBasicEmail">
@@ -67,7 +82,8 @@ export class PaymentInfo extends React.Component {
 
 const mapState = state => {
   return {
-    userId: state.user.id
+    userId: state.user.id,
+    cart: state.cart
   }
 }
 

@@ -62,7 +62,7 @@ class SingleProduct extends React.Component {
               </Card.Text>
               {this.props.user.id ? (
                 <Button
-                  variant="primary"
+                  variant="dark"
                   onClick={() => {
                     this.props.addProduct(product.id, this.props.user.id)
                   }}
@@ -71,7 +71,8 @@ class SingleProduct extends React.Component {
                 </Button>
               ) : (
                 <Button
-                  variant="primary"
+                  variant="dark"
+                  size="sm"
                   onClick={() => {
                     return this.addProductToGuestCart(product.id)
                   }}
