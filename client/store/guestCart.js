@@ -84,7 +84,7 @@ export const addProductToGuestCart = productId => {
         console.log('thunk creator', productObjQuantity)
         //if cart has same item before
         dispatch(changeQuantity(productObjQuantity))
-        // dispatch(addProduct(productObjQuantity))
+        // change quantity in localStorage?
       } else {
         //if no such item in non empty cart
         dispatch(addProduct(productObj))
@@ -98,38 +98,51 @@ export const addProductToGuestCart = productId => {
 }
 
 export const decreaseQuantity = productId => {
-  let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
-  if (previousGuestCart) {
-    //previous exit item
-    let uniqueItem = {}
-    for (let i = 0; i < previousGuestCart.length; i++) {
-      let item = previousGuestCart[i]
-      // console.log(
-      //   'previosu cart find matching item',
-      //   item.productId,
-      //   selectProduct.data.id
-      // )
-      if (item.productId === selectProduct.data.id) {
-        uniqueItem = item
+  return dispatch => {
+    let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
+    if (previousGuestCart) {
+      //previous exit item
+      let uniqueItem = {}
+      for (let i = 0; i < previousGuestCart.length; i++) {
+        let item = previousGuestCart[i]
+        // console.log(
+        //   'previosu cart find matching item',
+        //   item.productId,
+        //   selectProduct.data.id
+        // )
+        if (item.productId === productId) {
+          uniqueItem = item
+        }
+      }
+      if (uniqueItem.productId) {
+        //delete the previos and add new item with quantity +1
+        let productObjQuantity = {
+          productId: uniqueItem.productId,
+          name: uniqueItem.name,
+          price: uniqueItem.price,
+          imageURL: uniqueItem.image,
+          category: uniqueItem.category,
+          description: uniqueItem.description,
+          inventory: uniqueItem.inventory,
+          quantity: uniqueItem.quantity >= 1 ? uniqueItem.quantity - 1 : 0
+        }
+        dispatch(changeQuantity(productObjQuantity))
       }
     }
-    if (uniqueItem.productId) {
-      //delete the previos and add new item with quantity +1
-      let productObjQuantity = {
-        productId: selectProduct.data.id,
-        name: selectProduct.data.name,
-        price: selectProduct.data.price,
-        imageURL: selectProduct.data.image,
-        category: selectProduct.data.category,
-        description: selectProduct.data.description,
-        inventory: selectProduct.data.inventory,
-        quantity: uniqueItem.quantity - 1
-      }
-    }
-    console.log('thunk creator', productObjQuantity)
-    //if cart has same item before
-    dispatch(changeQuantity(productObjQuantity))
-    // dispatch(addProduct(productObjQuantity))
+  }
+}
+
+export const deleteInGuestCart = productId => {
+  return async dispatch => {
+    let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
+    const stayInGuestCart = previousGuestCart.filter(item => {
+      return item.productId !== productId
+    })
+    let JSONready = JSON.stringify(stayInGuestCart)
+    localStorage.setItem('guestCart', JSONready)
+    const previousCart =
+      (await JSON.parse(localStorage.getItem('guestCart'))) || []
+    dispatch(setGuestCart(previousCart))
   }
 }
 
