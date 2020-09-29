@@ -35,7 +35,13 @@ class Navigation extends React.Component {
     return (
       <div>
         <Navbar bg="dark" variant="dark">
-          <h1>Lulight</h1>
+          <h1>
+            <img
+              className="logo"
+              src="http://lulightshop.com/wp-content/uploads/2019/07/logo-lulight.png"
+            />
+          </h1>
+          <h3 style={{color: '#ddc1bb'}}>Lulight Home Decor </h3>
           {this.props.isLoggedIn ? (
             <div>
               {/* The navbar will show these links after you log in */}
