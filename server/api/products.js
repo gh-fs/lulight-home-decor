@@ -89,14 +89,7 @@ router.delete('/:id', async (req, res, next) => {
       }
     })
 
-    if (productAlreadyInCart.quantity === 1) {
-      await OrderHistory.destroy({
-        where: {
-          productId: req.params.id,
-          orderId: existingOrder.id
-        }
-      })
-    } else {
+    if (productAlreadyInCart.quantity >= 1) {
       await productAlreadyInCart.update({
         quantity: productAlreadyInCart.quantity - 1
       })

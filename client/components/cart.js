@@ -5,7 +5,8 @@ import {
   getCartFromServer,
   removeItemFromCart,
   addProductToServCart,
-  decreaseInCart
+  decreaseInCart,
+  submitOrder
 } from '../store/cart'
 import {Link} from 'react-router-dom'
 
@@ -40,8 +41,6 @@ export class Cart extends React.Component {
 
   render() {
     let currentCart = this.props.cart
-    console.log('current cart', currentCart)
-    console.log('did this work?')
     return (
       <div className="whole-cart">
         {currentCart.length === 0 ? (
@@ -115,11 +114,14 @@ export class Cart extends React.Component {
             })}
         </div>
         <div className="cart-total">
-          Total Due at Checkout : $
+          Total Due at Checkout: $
           {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
         </div>
-        <Button variant="dark">
-          <Link to="/payment">Proceed to Checkout</Link>
+        <Button
+          variant="dark"
+          onClick={() => this.props.submitOrder(this.props.user.id)}
+        >
+          <Link to="/thankyou">Submit Order</Link>
         </Button>
       </div>
     )
@@ -146,6 +148,9 @@ const mapDispatch = dispatch => {
     },
     decreaseInCart: itemId => {
       dispatch(decreaseInCart(itemId))
+    },
+    submitOrder: userId => {
+      dispatch(submitOrder(userId))
     }
   }
 }

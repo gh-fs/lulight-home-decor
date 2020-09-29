@@ -30,7 +30,7 @@ class AllProducts extends React.Component {
                             </Card.Text>
                             <Button variant="dark">
                               <Link to={`/products/${product.id}`}>
-                                See Details
+                                More Details
                               </Link>
                             </Button>
                           </Card.Body>

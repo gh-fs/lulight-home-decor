@@ -93,3 +93,16 @@ form div {
   width: 75px;
   height: 75px;
 }
+
+.heading {
+  margin: 10px;
+}
+
+.signup-login {
+  color: black;
+  margin: 15px;
+}
+
+.carousel-text {
+  color: grey;
+}
