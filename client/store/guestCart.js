@@ -120,7 +120,7 @@ export const decreaseQuantity = productId => {
           productId: uniqueItem.productId,
           name: uniqueItem.name,
           price: uniqueItem.price,
-          imageURL: uniqueItem.image,
+          imageURL: uniqueItem.imageURL,
           category: uniqueItem.category,
           description: uniqueItem.description,
           inventory: uniqueItem.inventory,
