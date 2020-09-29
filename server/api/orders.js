@@ -1,27 +1,6 @@
 const router = require('express').Router()
 const {Order} = require('../db/models')
-
-const isAdminMiddleware = (req, res, next) => {
-  const currentUser = req.user
-  if (currentUser && currentUser.isAdmin) {
-    next()
-  } else {
-    const error = new Error('Access denied!')
-    error.status = 401
-    next(error)
-  }
-}
-
-const isUserMiddleware = (req, res, next) => {
-  const currentUserId = req.user.id
-  if (currentUserId === Number(req.params.userId)) {
-    next()
-  } else {
-    const error = new Error('You do not have access to this cart!')
-    error.status = 401
-    next(error)
-  }
-}
+const {isAdminMiddleware, isUserMiddleware} = require('./gatekeeper')
 
 // get all orders
 router.get('/', isAdminMiddleware, async (req, res, next) => {
@@ -49,15 +28,10 @@ router.get('/:userId', isUserMiddleware, async (req, res, next) => {
 // create new order
 router.post('/', async (req, res, next) => {
   try {
-    console.log('THIS IS REQ.BODY IN THE POST ROUTE!!!!!!', req.body)
     const order = await Order.create({
-      subtotal: 0,
       userId: req.body.userId
     })
     await order.setUser(req.body)
-    // if (order) {
-    //   res.send(order)
-    // }
   } catch (err) {
     next(err)
   }

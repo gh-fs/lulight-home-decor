@@ -15,7 +15,6 @@ class Navigation extends React.Component {
   componentDidMount() {}
 
   calQuantity(arr) {
-    // console.log(item)
     let totalQuantity = arr.reduce((total, item) => {
       return total + item.orderHistory.quantity
     }, 0)
@@ -31,7 +30,6 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.guestCart)
     return (
       <div>
         <Navbar bg="dark" variant="dark">
@@ -40,7 +38,7 @@ class Navigation extends React.Component {
               className="logo"
               src="http://lulightshop.com/wp-content/uploads/2019/07/logo-lulight.png"
             />
-          </h1>
+          </h1>{' '}
           <h3 style={{color: '#ddc1bb'}}>Lulight Home Decor </h3>
           {this.props.isLoggedIn ? (
             <div>
@@ -80,7 +78,7 @@ class Navigation extends React.Component {
                   All Products
                 </Nav.Link>
                 <Nav.Link as={Link} to="/guestcart">
-                  GuestCart(
+                  Guest Cart (
                   {this.props.guestCart.length
                     ? this.calGuestCartQuantity(this.props.guestCart)
                     : 0}

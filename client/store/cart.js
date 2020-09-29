@@ -35,7 +35,7 @@ export const getCartFromServer = userId => {
       let order = response.data
       dispatch(setCart(order.products))
     } catch (err) {
-      console.log('error occurred with getCartFromServer thunk creator')
+      console.err(err)
     }
   }
 }
@@ -54,7 +54,6 @@ export const addProductToServCart = (productId, userId) => {
       productId: productId
     })
     const updatedOrder = response.data
-    console.log('order returned from add to cart', updatedOrder)
     dispatch(addItem(updatedOrder.products))
   }
 }
@@ -69,10 +68,6 @@ export const decreaseInCart = productId => {
 export const submitOrder = userId => {
   if (!userId) {
     console.log('this cart belongs to a guest')
-    // return async (dispatch) => {
-    //   await axios.post(`/api/orders/`)
-    //   dispatch(clearCart([]))
-    // }
   } else {
     return async dispatch => {
       await axios.put(`/api/orders/${userId}`)

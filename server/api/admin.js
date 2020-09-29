@@ -1,16 +1,6 @@
 const router = require('express').Router()
 const {Product} = require('../db/models')
-
-const isAdminMiddleware = (req, res, next) => {
-  const currentUser = req.user
-  if (currentUser && currentUser.isAdmin) {
-    next()
-  } else {
-    const error = new Error('Access denied!')
-    error.status = 401
-    next(error)
-  }
-}
+const {isAdminMiddleware} = require('./gatekeeper')
 
 // add product
 router.post('/', isAdminMiddleware, async (req, res, next) => {

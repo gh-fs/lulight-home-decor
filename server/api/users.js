@@ -1,17 +1,8 @@
 const router = require('express').Router()
 const {User} = require('../db/models')
-module.exports = router
+const {isAdminMiddleware} = require('./gatekeeper')
 
-const isAdminMiddleware = (req, res, next) => {
-  const currentUser = req.user
-  if (currentUser && currentUser.isAdmin) {
-    next()
-  } else {
-    const error = new Error('Access denied!')
-    error.status = 401
-    next(error)
-  }
-}
+module.exports = router
 
 // get all users
 router.get('/', isAdminMiddleware, async (req, res, next) => {
