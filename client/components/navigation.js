@@ -9,6 +9,7 @@ class Navigation extends React.Component {
   constructor() {
     super()
     this.calQuantity = this.calQuantity.bind(this)
+    this.calGuestCartQuantity = this.calGuestCartQuantity.bind(this)
   }
 
   componentDidMount() {}
@@ -22,8 +23,15 @@ class Navigation extends React.Component {
     return totalQuantity
   }
 
+  calGuestCartQuantity(arr) {
+    let totalQuantity = arr.reduce((total, item) => {
+      return total + item.quantity
+    }, 0)
+    return totalQuantity
+  }
+
   render() {
-    // console.log(this.props.cart)
+    console.log(this.props.guestCart)
     return (
       <div>
         <Navbar bg="dark" variant="dark">
@@ -64,7 +72,11 @@ class Navigation extends React.Component {
                   All Products
                 </Nav.Link>
                 <Nav.Link as={Link} to="/guestcart">
-                  GuestCart({this.props.guestCart.length})
+                  GuestCart(
+                  {this.props.guestCart.length
+                    ? this.calGuestCartQuantity(this.props.guestCart)
+                    : 0}
+                  )
                 </Nav.Link>
                 <Nav.Link as={Link} to="/login">
                   Login

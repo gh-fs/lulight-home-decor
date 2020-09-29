@@ -36,6 +36,7 @@ export const addProductToGuestCart = productId => {
     const selectProduct = await axios.get(`/api/products/${productId}`)
     //if product already in local storage, just increase quantity
     //else add the object
+    console.log('product from db', selectProduct)
     let productObj = {
       productId: selectProduct.data.id,
       name: selectProduct.data.name,
@@ -53,26 +54,34 @@ export const addProductToGuestCart = productId => {
     //[{},{}]
     //previosuGuestCart.length>0
     if (previousGuestCart) {
-      let uniqueItem = ''
-      for (let item of previousGuestCart) {
-        if (item.id === selectProduct.data.id) {
+      //previous exit item
+      let uniqueItem = {}
+      for (let i = 0; i < previousGuestCart.length; i++) {
+        let item = previousGuestCart[i]
+        console.log(
+          'previosu cart find matching item',
+          item.productId,
+          selectProduct.data.id
+        )
+        if (item.productId === selectProduct.data.id) {
           uniqueItem = item
         }
       }
 
-      if (uniqueItem) {
+      if (uniqueItem.productId) {
         //delete the previos and add new item with quantity +1
-        // let productObjQuantity = {
-        //   productId: selectProduct.data.id,
-        //   name: selectProduct.data.name,
-        //   price: selectProduct.data.price,
-        //   imageURL: selectProduct.data.image,
-        //   category: selectProduct.data.category,
-        //   description: selectProduct.data.description,
-        //   inventory: selectProduct.data.inventory,
-        //   quantity: uniqueItem.quantity + 1,
-        // }
-        let productObjQuantity = replaceProductQuantity(uniqueItem)
+        let productObjQuantity = {
+          productId: selectProduct.data.id,
+          name: selectProduct.data.name,
+          price: selectProduct.data.price,
+          imageURL: selectProduct.data.image,
+          category: selectProduct.data.category,
+          description: selectProduct.data.description,
+          inventory: selectProduct.data.inventory,
+          quantity: uniqueItem.quantity + 1
+        }
+
+        console.log('thunk creator', productObjQuantity)
         //if cart has same item before
         dispatch(changeQuantity(productObjQuantity))
         // dispatch(addProduct(productObjQuantity))
@@ -88,16 +97,39 @@ export const addProductToGuestCart = productId => {
   }
 }
 
-export const replaceProductQuantity = preExistItem => {
-  return {
-    productId: preExistItem.id,
-    name: preExistItem.name,
-    price: preExistItem.price,
-    imageURL: preExistItem.image,
-    category: preExistItem.category,
-    description: preExistItem.description,
-    inventory: preExistItem.inventory,
-    quantity: preExistItem.quantity + 1
+export const decreaseQuantity = productId => {
+  let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
+  if (previousGuestCart) {
+    //previous exit item
+    let uniqueItem = {}
+    for (let i = 0; i < previousGuestCart.length; i++) {
+      let item = previousGuestCart[i]
+      // console.log(
+      //   'previosu cart find matching item',
+      //   item.productId,
+      //   selectProduct.data.id
+      // )
+      if (item.productId === selectProduct.data.id) {
+        uniqueItem = item
+      }
+    }
+    if (uniqueItem.productId) {
+      //delete the previos and add new item with quantity +1
+      let productObjQuantity = {
+        productId: selectProduct.data.id,
+        name: selectProduct.data.name,
+        price: selectProduct.data.price,
+        imageURL: selectProduct.data.image,
+        category: selectProduct.data.category,
+        description: selectProduct.data.description,
+        inventory: selectProduct.data.inventory,
+        quantity: uniqueItem.quantity - 1
+      }
+    }
+    console.log('thunk creator', productObjQuantity)
+    //if cart has same item before
+    dispatch(changeQuantity(productObjQuantity))
+    // dispatch(addProduct(productObjQuantity))
   }
 }
 
@@ -111,9 +143,9 @@ export default function guestCartReducer(state = initialState, action) {
     case ADD_PRODUCT_TO_GUEST_CART:
       return [...state, action.product]
     case CHANGE_QUANTITY:
-      console.log(state.guestCart)
-      newArr = state.guestCart.map(item => {
-        if (item.id === action.product.id) {
+      console.log(state)
+      newArr = state.map(item => {
+        if (item.productId === action.product.productId) {
           item = action.product
           return item
         } else {
