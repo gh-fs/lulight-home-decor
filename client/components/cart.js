@@ -119,7 +119,7 @@ export class Cart extends React.Component {
           {this.props.cart.length ? this.calTotal(this.props.cart) : 0}
         </div>
         <Button variant="dark">
-          <Link to="/payment">Proceed to Checkout</Link>
+          <Link to="/thankyou">Proceed to Checkout</Link>
         </Button>
       </div>
     )

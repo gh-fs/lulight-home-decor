@@ -3,6 +3,7 @@ import axios from 'axios'
 let SET_GUEST_CART = 'SET_GUEST_CART'
 let ADD_PRODUCT_TO_GUEST_CART = 'ADD_PRODUCT_TO_GUEST_CART'
 let CHANGE_QUANTITY = 'CHANGE_QUANTITY'
+let GET_CART = 'GET_CART'
 
 const setGuestCart = guestCart => ({
   type: SET_GUEST_CART,
@@ -17,6 +18,10 @@ const addProduct = product => ({
 const changeQuantity = product => ({
   type: CHANGE_QUANTITY,
   product
+})
+
+const getCart = () => ({
+  type: GET_CART
 })
 
 //for guest
@@ -146,6 +151,16 @@ export const deleteInGuestCart = productId => {
   }
 }
 
+export const setLocalStorageGuestCart = () => {
+  return async dispatch => {
+    const updatedCart = await dispatch(getCart())
+    const JSONready = JSON.stringify(updatedCart)
+    localStorage.setItem('guestCart', JSONready)
+    return updatedCart
+    //set to local storage
+  }
+}
+
 //[{mirror},{mirror}]
 const initialState = []
 let newArr = ''
@@ -166,6 +181,8 @@ export default function guestCartReducer(state = initialState, action) {
         }
       })
       return newArr
+    case GET_CART:
+      return state
     default:
       return state
   }
