@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Order} = require('../db/models')
+const {Order, Product, OrderHistory} = require('../db/models')
 const {isAdminMiddleware, isUserMiddleware} = require('./gatekeeper')
 
 // get all orders
@@ -25,19 +25,31 @@ router.get('/:userId', isUserMiddleware, async (req, res, next) => {
   }
 })
 
-// create new order
+// create new order - for guest checkout
 router.post('/', async (req, res, next) => {
   try {
-    const order = await Order.create({
-      userId: req.body.userId
+    const order = await Order.create({completed: true})
+
+    let products = req.body
+
+    products.forEach(async product => {
+      if (product.quantity > 0) {
+        await OrderHistory.create({
+          productId: product.productId,
+          orderId: order.id,
+          quantity: product.quantity
+        })
+      }
     })
-    await order.setUser(req.body)
+
+    await order.reload()
+    res.sendStatus(204)
   } catch (err) {
     next(err)
   }
 })
 
-// submit order
+// submit order - for logged in user
 router.put('/:userId', isUserMiddleware, async (req, res, next) => {
   try {
     const currentOrder = await Order.findOne({

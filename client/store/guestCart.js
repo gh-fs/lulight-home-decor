@@ -3,6 +3,7 @@ import axios from 'axios'
 let SET_GUEST_CART = 'SET_GUEST_CART'
 let ADD_PRODUCT_TO_GUEST_CART = 'ADD_PRODUCT_TO_GUEST_CART'
 let CHANGE_QUANTITY = 'CHANGE_QUANTITY'
+let CLEAR_CART = 'CLEAR_CART'
 
 const setGuestCart = guestCart => ({
   type: SET_GUEST_CART,
@@ -19,24 +20,23 @@ const changeQuantity = product => ({
   product
 })
 
-//for guest
-//thunk creator
+const clearCart = emptyCart => ({
+  type: CLEAR_CART,
+  emptyCart
+})
+
 export const getCartFromLocalStorage = () => {
   return async dispatch => {
     const previousGuestCart =
       (await JSON.parse(localStorage.getItem('guestCart'))) || []
     dispatch(setGuestCart(previousGuestCart))
-    // const JSONready = JSON.stringify(previousGuestCart)
-    // localStorage.setItem('guestCart', JSONready)
   }
 }
 
 export const addProductToGuestCart = productId => {
   return async dispatch => {
     const selectProduct = await axios.get(`/api/products/${productId}`)
-    //if product already in local storage, just increase quantity
-    //else add the object
-    console.log('product from db', selectProduct)
+
     let productObj = {
       productId: selectProduct.data.id,
       name: selectProduct.data.name,
@@ -47,29 +47,20 @@ export const addProductToGuestCart = productId => {
       inventory: selectProduct.data.inventory,
       quantity: 1
     }
-    let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
-    console.log('previos Cart', previousGuestCart)
-    //[{name:A,quantity:2},{name:B,quantity:1}]
 
-    //[{},{}]
-    //previosuGuestCart.length>0
+    let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
+
     if (previousGuestCart) {
-      //previous exit item
-      let uniqueItem = {}
+      // look for duplicate item in previous guest cart
+      let duplicate = {}
       for (let i = 0; i < previousGuestCart.length; i++) {
-        let item = previousGuestCart[i]
-        console.log(
-          'previosu cart find matching item',
-          item.productId,
-          selectProduct.data.id
-        )
-        if (item.productId === selectProduct.data.id) {
-          uniqueItem = item
+        let currentItem = previousGuestCart[i]
+        if (currentItem.productId === selectProduct.data.id) {
+          duplicate = currentItem
         }
       }
-
-      if (uniqueItem.productId) {
-        //delete the previos and add new item with quantity +1
+      // if duplicate exists, delete the duplicate and replace with new item with quantity +1
+      if (duplicate.productId) {
         let productObjQuantity = {
           productId: selectProduct.data.id,
           name: selectProduct.data.name,
@@ -78,22 +69,30 @@ export const addProductToGuestCart = productId => {
           category: selectProduct.data.category,
           description: selectProduct.data.description,
           inventory: selectProduct.data.inventory,
-          quantity: uniqueItem.quantity + 1
+          quantity: duplicate.quantity + 1
         }
 
-        console.log('thunk creator', productObjQuantity)
-        //if cart has same item before
+        // update in local storage
+        let newLocalStorageCart = previousGuestCart.map(item => {
+          if (item.productId === selectProduct.data.id) {
+            return productObjQuantity
+          } else {
+            return item
+          }
+        })
+        let JSONready = JSON.stringify(newLocalStorageCart)
+        localStorage.setItem('guestCart', JSONready)
+
+        // update in redux store
         dispatch(changeQuantity(productObjQuantity))
-        // change quantity in localStorage?
       } else {
-        //if no such item in non empty cart
+        // if there are no duplicates, only update in redux store
         dispatch(addProduct(productObj))
       }
     } else {
-      //if the cart is an empty array
+      // if cart is empty, just add the new product
       dispatch(addProduct(productObj))
     }
-    //dispatch(addProduct(selectProduct.data))
   }
 }
 
@@ -101,31 +100,37 @@ export const decreaseQuantity = productId => {
   return dispatch => {
     let previousGuestCart = JSON.parse(localStorage.getItem('guestCart'))
     if (previousGuestCart) {
-      //previous exit item
-      let uniqueItem = {}
+      let duplicate = {}
       for (let i = 0; i < previousGuestCart.length; i++) {
-        let item = previousGuestCart[i]
-        // console.log(
-        //   'previosu cart find matching item',
-        //   item.productId,
-        //   selectProduct.data.id
-        // )
-        if (item.productId === productId) {
-          uniqueItem = item
+        let currentItem = previousGuestCart[i]
+        if (currentItem.productId === productId) {
+          duplicate = currentItem
         }
       }
-      if (uniqueItem.productId) {
-        //delete the previos and add new item with quantity +1
+
+      if (duplicate.productId) {
         let productObjQuantity = {
-          productId: uniqueItem.productId,
-          name: uniqueItem.name,
-          price: uniqueItem.price,
-          imageURL: uniqueItem.imageURL,
-          category: uniqueItem.category,
-          description: uniqueItem.description,
-          inventory: uniqueItem.inventory,
-          quantity: uniqueItem.quantity >= 1 ? uniqueItem.quantity - 1 : 0
+          productId: duplicate.productId,
+          name: duplicate.name,
+          price: duplicate.price,
+          imageURL: duplicate.imageURL,
+          category: duplicate.category,
+          description: duplicate.description,
+          inventory: duplicate.inventory,
+          quantity: duplicate.quantity >= 1 ? duplicate.quantity - 1 : 0
         }
+
+        let newLocalStorageCart = previousGuestCart.map(item => {
+          if (item.productId === productId) {
+            return productObjQuantity
+          } else {
+            return item
+          }
+        })
+
+        let JSONready = JSON.stringify(newLocalStorageCart)
+        localStorage.setItem('guestCart', JSONready)
+
         dispatch(changeQuantity(productObjQuantity))
       }
     }
@@ -138,6 +143,7 @@ export const deleteInGuestCart = productId => {
     const stayInGuestCart = previousGuestCart.filter(item => {
       return item.productId !== productId
     })
+
     let JSONready = JSON.stringify(stayInGuestCart)
     localStorage.setItem('guestCart', JSONready)
     const previousCart =
@@ -146,7 +152,14 @@ export const deleteInGuestCart = productId => {
   }
 }
 
-//[{mirror},{mirror}]
+export const submitGuestOrder = guestOrder => {
+  return async dispatch => {
+    await axios.post('/api/orders', guestOrder)
+    localStorage.setItem('guestCart', JSON.stringify([]))
+    dispatch(clearCart([]))
+  }
+}
+
 const initialState = []
 let newArr = ''
 export default function guestCartReducer(state = initialState, action) {
@@ -156,7 +169,6 @@ export default function guestCartReducer(state = initialState, action) {
     case ADD_PRODUCT_TO_GUEST_CART:
       return [...state, action.product]
     case CHANGE_QUANTITY:
-      console.log(state)
       newArr = state.map(item => {
         if (item.productId === action.product.productId) {
           item = action.product
@@ -166,6 +178,8 @@ export default function guestCartReducer(state = initialState, action) {
         }
       })
       return newArr
+    case CLEAR_CART:
+      return action.emptyCart
     default:
       return state
   }
